@@ -3,15 +3,54 @@ import Space from "@/components/Space";
 import LogoText from "@/components/svg/LogoText";
 import { useModal } from "@/hooks/useModal";
 import { OwnerModal } from "@/pages/login/components/OwnerModal";
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { getCallbackOptions } from "@/query/options/user";
+import { useEffect } from "react";
 
 export const LoginPage = () => {
   const { openModal } = useModal();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const code = searchParams.get("code");
+
+  const { data, isLoading, error } = useQuery(getCallbackOptions(code || ""));
+
+  useEffect(() => {
+    if (data && code) {
+      localStorage.setItem("accessToken", data.response.accessToken);
+      localStorage.setItem("refreshToken", data.response.refreshToken);
+      navigate("/location", { replace: true });
+    }
+  }, [data, code, navigate]);
+
+  useEffect(() => {
+    if (error && code) {
+      console.error("카카오 로그인 실패:", error);
+      navigate("/login", { replace: true });
+    }
+  }, [error, code, navigate]);
+
+  const handleKakaoLogin = () => {
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${
+      import.meta.env.VITE_KAKAO_ID
+    }&redirect_uri=${encodeURIComponent(window.location.origin + "/login")}`;
+  };
 
   const handleOwnerLogin = () => {
     openModal(({ isOpen, onClose }) => (
       <OwnerModal isOpen={isOpen} onClose={onClose} />
     ));
   };
+
+  if (isLoading && code) {
+    return (
+      <main className="flex flex-col h-screen w-full items-center justify-center bg-gradient-to-b from-[#FFECE9] to-white">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+      </main>
+    );
+  }
 
   return (
     <main className="flex flex-col h-screen w-full items-center justify-end bg-gradient-to-b from-[#FFECE9] to-white">
@@ -37,7 +76,7 @@ export const LoginPage = () => {
       </div>
       <div className="px-5 w-full gap-[5px] flex flex-col">
         <Button
-          onClick={() => {}}
+          onClick={handleKakaoLogin}
           className="w-full text-button1 text-[#181600] py-[17px] bg-[#FEE500] rounded-[12px]"
         >
           카카오 로그인

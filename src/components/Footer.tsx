@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Home from "./svg/Home";
 import User from "./svg/User";
 import QR from "./svg/QR";
+import Button from "@/components/Button";
 
 export default function Footer() {
   const location = useLocation();
@@ -17,6 +18,20 @@ export default function Footer() {
 
   const handleUserClick = () => {
     navigate("/user", { replace: true });
+  };
+
+  const handleQRClick = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: "environment",
+        },
+      });
+      stream.getTracks().forEach((track) => track.stop());
+    } catch (error) {
+      console.error("카메라 접근 실패:", error);
+      alert("카메라에 접근할 수 없습니다. 카메라 권한을 확인해주세요.");
+    }
   };
 
   return (
@@ -39,9 +54,12 @@ export default function Footer() {
         </p>
       </div>
       <div className="absolute left-1/2 transform -translate-x-1/2 -top-[35px]">
-        <div className="w-[70px] h-[70px] bg-primary-500 rounded-full flex items-center justify-center">
+        <Button
+          className="w-[70px] h-[70px] bg-primary-500 rounded-full flex items-center justify-center"
+          onClick={handleQRClick}
+        >
           <QR className="size-[38px] text-white" />
-        </div>
+        </Button>
       </div>
 
       <div

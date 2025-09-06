@@ -1,33 +1,52 @@
 import ArrowDropdown from "@/components/svg/ArrowDropdown";
 import { FILTER_OPTIONS, FILTER_LABELS } from "@/pages/main/const";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Footer from "@/components/Footer";
-import type { PostCardProps } from "@/pages/main/components/PostCard";
 import MainHeader from "@/pages/main/components/MainHeader";
 import PostCard from "@/pages/main/components/PostCard";
 import FilterModal from "@/pages/main/components/FilterModal";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getRegularMainOptions } from "@/query/options/regular";
 
 export const MainPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [selectedFilter, setSelectedFilter] = useState<
-    keyof typeof FILTER_OPTIONS
-  >(FILTER_OPTIONS.NEWEST_REGISTER);
 
-  const posts: PostCardProps[] = Array.from({ length: 10 }, (_, i) => ({
-    id: i + 1,
-    imageUrl: `https://picsum.photos/400/300?random=${i + 1}`,
-    title: `단골가게 ${i + 1}`,
-    date: "2024-01-15",
-    visitCount: Math.floor(Math.random() * 10) + 1,
-    isNotice: Math.random() > 0.8,
-  }));
+  const { data: mainData } = useSuspenseQuery(getRegularMainOptions());
+  const allPosts = mainData.response.storeList;
 
-  const handleFilterClick = () => {
-    setIsFilterOpen(!isFilterOpen);
-  };
+  const selectedFilter =
+    (searchParams.get(
+      "filter"
+    ) as (typeof FILTER_OPTIONS)[keyof typeof FILTER_OPTIONS]) ||
+    FILTER_OPTIONS.NEWEST_REGISTER;
+
+  const searchQuery = searchParams.get("search") || "";
+
+  const filteredPosts = allPosts.filter((post) =>
+    post.storeName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const posts = [...filteredPosts].sort((a, b) => {
+    switch (selectedFilter) {
+      case "stamp_soon":
+        return a.availableStamp - b.availableStamp;
+      case "recent_visit":
+        return (
+          new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime()
+        );
+      case "newest_register":
+        return b.storeId - a.storeId;
+      case "oldest_register":
+        return a.storeId - b.storeId;
+      default:
+        return 0;
+    }
+  });
 
   const handleSelectFilter = (filter: keyof typeof FILTER_OPTIONS) => {
-    setSelectedFilter(filter);
+    setSearchParams({ filter });
     setIsFilterOpen(false);
   };
 
@@ -41,12 +60,12 @@ export const MainPage = () => {
         <div className="w-full flex flex-row justify-between">
           <div className="w-full flex flex-row gap-[5px] items-center">
             <h2 className="text-sub1 text-black">나의 단골가게</h2>
-            <p className="text-sub1 text-primary-500">{"(6)"}</p>
+            <p className="text-sub1 text-primary-500">{`(${posts.length})`}</p>
           </div>
           <div className="relative">
             <div
               className="flex w-fit flex-row gap-[5px] items-center cursor-pointer"
-              onClick={handleFilterClick}
+              onClick={() => setIsFilterOpen(!isFilterOpen)}
             >
               <ArrowDropdown
                 className={`size-[24px] transition-transform duration-300 ${
@@ -67,15 +86,7 @@ export const MainPage = () => {
         </div>
         <div className="w-full flex flex-col gap-[10px] mt-[5px]">
           {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              id={post.id}
-              imageUrl={post.imageUrl}
-              title={post.title}
-              date={post.date}
-              visitCount={post.visitCount}
-              isNotice={post.isNotice}
-            />
+            <PostCard key={post.storeId} post={post} />
           ))}
         </div>
       </main>

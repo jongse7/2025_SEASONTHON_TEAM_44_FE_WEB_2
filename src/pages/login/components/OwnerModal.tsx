@@ -41,7 +41,12 @@ export function OwnerModal({ isOpen, onClose }: OwnerModalProps) {
                     await navigator.clipboard.writeText(
                       "http://localhost:5173/owner"
                     );
-                    openModal(({ onClose }) => <Toast onClose={onClose} />);
+                    openModal(({ onClose }) => (
+                      <Toast
+                        label="클립보드에 복사되었습니다"
+                        onClose={onClose}
+                      />
+                    ));
                   } catch (error) {
                     console.error("복사 실패:", error);
                   }

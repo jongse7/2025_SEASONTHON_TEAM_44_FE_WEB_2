@@ -1,26 +1,16 @@
+import type { GetRegularMainStore } from "@/schema/api/regular";
 import { useNavigate } from "react-router-dom";
 
-export interface PostCardProps {
-  id: number;
-  imageUrl: string;
-  title: string;
-  date: string;
-  visitCount: number;
-  isNotice: boolean;
+interface PostCardProps {
+  post: GetRegularMainStore;
 }
 
-export default function PostCard({
-  imageUrl,
-  title,
-  date,
-  visitCount,
-  isNotice,
-  id,
-}: PostCardProps) {
+export default function PostCard({ post }: PostCardProps) {
   const navigate = useNavigate();
   const handleCardClick = () => {
     try {
-      navigate(`/main/${id}`);
+      const storeId = post.storeId;
+      navigate(`/main/${storeId.toString()}`);
     } catch (error) {
       console.error("Navigation error:", error);
     }
@@ -32,19 +22,19 @@ export default function PostCard({
     >
       <div className="w-full h-[110px] relative">
         <img
-          src={imageUrl}
-          alt={title}
+          src={post.imageUrl}
+          alt={post.storeName}
           className="w-full h-full object-cover"
         />
       </div>
       <div className="w-full flex flex-col gap-[5px] px-[20px] py-[16px]">
-        <h3 className="text-sub2 text-black">{title}</h3>
+        <h3 className="text-sub2 text-black">{post.storeName}</h3>
         <div className="text-gray-500 text-body4 bg-white w-full flex flex-row justify-between">
-          <p>{date}</p>
-          <p>방문횟수: {visitCount}회/10회</p>
+          <p>{post.lastVisit}</p>
+          <p>방문횟수: {post.visitCount}회/10회</p>
         </div>
       </div>
-      {isNotice && (
+      {post.hasNewNoti && (
         <div className="absolute rounded-[12px] bg-primary-700 text-white top-[15px] text-body3 p-[10px] justify-items-center flex right-[15px]">
           새로운공지
         </div>

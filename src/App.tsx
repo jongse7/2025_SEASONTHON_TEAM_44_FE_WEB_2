@@ -6,6 +6,7 @@ import { StorePage } from "@/pages/main/[id]/page";
 import { UserPage } from "@/pages/user/page";
 import { CouponPage } from "@/pages/user/coupon/page";
 import { LocationPage } from "@/pages/location/page";
+import OnboardingPage from "@/pages/onboadring/page";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/user" element={<UserPage />} />
           <Route path="/user/coupon" element={<CouponPage />} />
           <Route path="/location" element={<LocationPage />} />
+          <Route path="/onboarding" element={<OnboardingPage />} />
         </Routes>
       </OverlayProvider>
     </div>

@@ -1,13 +1,13 @@
 export const FILTER_OPTIONS = {
-  STAMP_SOON: 'STAMP_SOON',
-  RECENT_VISIT: 'RECENT_VISIT',
-  NEWEST_REGISTER: 'NEWEST_REGISTER',
-  OLDEST_REGISTER: 'OLDEST_REGISTER',
+  STAMP_SOON: "stamp_soon",
+  RECENT_VISIT: "recent_visit",
+  NEWEST_REGISTER: "newest_register",
+  OLDEST_REGISTER: "oldest_register",
 } as const;
 
 export const FILTER_LABELS = {
-  [FILTER_OPTIONS.STAMP_SOON]: '스탬프 임박순',
-  [FILTER_OPTIONS.RECENT_VISIT]: '최근 방문순',
-  [FILTER_OPTIONS.NEWEST_REGISTER]: '최신 등록순',
-  [FILTER_OPTIONS.OLDEST_REGISTER]: '오래된 등록순',
+  [FILTER_OPTIONS.STAMP_SOON]: "스탬프 임박순",
+  [FILTER_OPTIONS.RECENT_VISIT]: "최근 방문순",
+  [FILTER_OPTIONS.NEWEST_REGISTER]: "최신 등록순",
+  [FILTER_OPTIONS.OLDEST_REGISTER]: "오래된 등록순",
 } as const;

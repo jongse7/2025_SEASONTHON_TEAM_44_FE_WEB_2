@@ -1,8 +1,26 @@
-import { useState } from 'react';
-import Search from '@/components/svg/Search';
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useDebounce } from "@/hooks/useDebounce";
+import Search from "@/components/svg/Search";
 
 export default function SearchBar() {
-  const [inputValue, setInputValue] = useState<string>('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [inputValue, setInputValue] = useState(
+    searchParams.get("search") || ""
+  );
+  const debouncedValue = useDebounce(inputValue, 300);
+
+  useEffect(() => {
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      if (debouncedValue) {
+        newParams.set("search", debouncedValue);
+      } else {
+        newParams.delete("search");
+      }
+      return newParams;
+    });
+  }, [debouncedValue, setSearchParams]);
 
   return (
     <div className="relative w-full">
