@@ -8,6 +8,7 @@ import PostCard from "@/pages/main/components/PostCard";
 import FilterModal from "@/pages/main/components/FilterModal";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getRegularMainOptions } from "@/query/options/regular";
+import { cn } from "@/utils/cn";
 
 export const MainPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -51,7 +52,7 @@ export const MainPage = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-h-screen">
       <MainHeader />
       <article className="w-full py-[5px]">
         <img src="/images/main/article.png" alt="article" />
@@ -84,10 +85,19 @@ export const MainPage = () => {
             )}
           </div>
         </div>
-        <div className="w-full flex flex-col gap-[10px] mt-[5px]">
-          {posts.map((post) => (
-            <PostCard key={post.storeId} post={post} />
-          ))}
+        <div
+          className={cn(
+            "w-full flex flex-col gap-[10px] mt-[5px]",
+            posts.length === 0 && "h-[500px] flex items-center justify-center"
+          )}
+        >
+          {posts.length === 0 ? (
+            <p className="text-body1 w-full text-center text-gray-400">
+              동네 가게를 방문하세요
+            </p>
+          ) : (
+            posts.map((post) => <PostCard key={post.storeId} post={post} />)
+          )}
         </div>
       </main>
       <Footer />

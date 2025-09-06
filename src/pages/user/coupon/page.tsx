@@ -5,6 +5,7 @@ import CouponCard from "@/pages/user/coupon/components/CouponCard";
 import { getRegularCouponOptions } from "@/query/options/regular";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useSearchParams, Link } from "react-router-dom";
+import { cn } from "../../../utils/cn";
 
 export function CouponPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -40,22 +41,34 @@ export function CouponPage() {
             예정 쿠폰
           </Tab>
         </div>
-        <div className="flex flex-col gap-[5px] py-[10px]">
-          {coupons.response.map((coupon) =>
-            tab === "my-coupon" ? (
-              Array.from({ length: coupon.couponCount }).map((_, idx) => (
+        <div
+          className={cn(
+            "flex flex-col gap-[5px] py-[10px]",
+            coupons.response.length === 0 &&
+              "h-full flex items-center justify-center"
+          )}
+        >
+          {coupons.response.length === 0 ? (
+            <p className="text-body1 w-full text-center text-gray-400">
+              가게를 방문해 쿠폰을 발급 받으세요
+            </p>
+          ) : (
+            coupons.response.map((coupon) =>
+              tab === "my-coupon" ? (
+                Array.from({ length: coupon.couponCount }).map((_, idx) => (
+                  <CouponCard
+                    key={`${coupon.stampId}-${idx}`}
+                    coupon={coupon}
+                    isCoupon
+                  />
+                ))
+              ) : (
                 <CouponCard
-                  key={`${coupon.stampId}-${idx}`}
+                  key={coupon.stampId}
                   coupon={coupon}
-                  isCoupon
+                  isCoupon={false}
                 />
-              ))
-            ) : (
-              <CouponCard
-                key={coupon.stampId}
-                coupon={coupon}
-                isCoupon={false}
-              />
+              )
             )
           )}
         </div>

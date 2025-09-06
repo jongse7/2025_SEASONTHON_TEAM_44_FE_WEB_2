@@ -18,7 +18,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 export function StorePage() {
   const { storeId } = useParams();
@@ -26,6 +26,7 @@ export function StorePage() {
   const { openModal } = useModal();
   const queryClient = useQueryClient();
   const id = Number(storeId);
+  const location = useLocation();
 
   const { data: isStore } = useSuspenseQuery(getRegularStoreIdOptions(id));
   const { data } = useSuspenseQuery(getRegularStoreIdDetailOptions(id));
@@ -66,7 +67,9 @@ export function StorePage() {
     if (!isStore?.response) {
       postDasion();
     } else {
-      postStamp();
+      if (location.state?.from !== "main") {
+        postStamp();
+      }
     }
   }, [isStore, postDasion]);
 
