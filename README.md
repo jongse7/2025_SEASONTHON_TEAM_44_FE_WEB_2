@@ -21,7 +21,7 @@ pnpm dev
 
 ### 라우팅 & 상태관리
 
-- **TanStack Router** - 파일 기반 라우팅
+- **React Router Dom** - 라우팅
 - **TanStack Query** - 서버 상태 관리
 - **Zustand** - 클라이언트 상태 관리
 
