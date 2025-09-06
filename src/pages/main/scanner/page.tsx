@@ -91,10 +91,8 @@ export default function ScannerPage() {
         className="absolute inset-0 w-full h-full object-cover"
         playsInline
         muted
+        autoPlay
       />
-
-      <div className="absolute inset-0 bg-black bg-opacity-40" />
-
       <div className="absolute inset-0 flex items-center justify-center">
         <img
           src="/images/main/scanner.png"
