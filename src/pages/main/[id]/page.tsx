@@ -52,17 +52,13 @@ export function StorePage() {
     },
   });
   const { mutate: postNotiRead } = useMutation({
-    mutationFn: () => postRegularNotiRead(storeDetail.latestNoti.id),
+    mutationFn: (notiId: number) => postRegularNotiRead(notiId),
     onSuccess: () => {
       openModal(({ onClose }) => (
         <Toast label="공지 읽음 처리 완료" onClose={onClose} />
       ));
-      queryClient.invalidateQueries({
-        queryKey: ["regular", "main"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["regular", "detail", id],
-      });
+      queryClient.invalidateQueries({ queryKey: ["regular", "main"] });
+      queryClient.invalidateQueries({ queryKey: ["regular", "detail", id] });
     },
   });
 
@@ -76,10 +72,6 @@ export function StorePage() {
 
   const handleBackClick = () => {
     navigate("/main");
-  };
-
-  const handleNotiRead = () => {
-    postNotiRead();
   };
 
   const totalVisits = 10;
@@ -144,7 +136,7 @@ export function StorePage() {
               </p>
               <Button
                 className="w-full text-body3 text-white py-[13.5px] bg-gray-800 rounded-[12px]"
-                onClick={handleNotiRead}
+                onClick={() => postNotiRead(storeDetail.latestNoti!.id)}
               >
                 확인했어요
               </Button>
