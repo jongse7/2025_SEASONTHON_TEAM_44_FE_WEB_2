@@ -31,7 +31,7 @@ export default function PostCard({ post }: PostCardProps) {
         <h3 className="text-sub2 text-black">{post.storeName}</h3>
         <div className="text-gray-500 text-body4 bg-white w-full flex flex-row justify-between">
           <p>{post.lastVisit}</p>
-          <p>방문횟수: {post.visitCount}회/10회</p>
+          <p>방문횟수: {post.availableStamp}회/10회</p>
         </div>
       </div>
       {post.hasNewNoti && (

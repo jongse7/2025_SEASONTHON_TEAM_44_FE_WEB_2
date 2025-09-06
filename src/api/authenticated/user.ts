@@ -27,3 +27,7 @@ export const getUserMeSimple = async (): Promise<GetUserMeSimple> => {
   const response = await authenticatedApi.get("user/me/simple").json();
   return GetUserMeSimpleSchema.parse(response);
 };
+
+export const deleteUserMe = async () => {
+  await authenticatedApi.delete("user/me");
+};

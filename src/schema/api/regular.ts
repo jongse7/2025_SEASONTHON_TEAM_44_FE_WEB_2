@@ -86,7 +86,7 @@ const getRegularMainStoreSchema = z.object({
     return `${month}/${day}`;
   }),
   visitCount: z.number(),
-  availableStamp: z.number(),
+  availableStamp: z.number().transform((stamp) => stamp % 10),
   hasNewNoti: z.boolean(),
 });
 

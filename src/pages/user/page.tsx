@@ -5,13 +5,21 @@ import Pop from "@/components/svg/Pop";
 import StoreCard from "@/pages/user/components/StoreCard";
 import { getRegularMypageOptions } from "@/query/options/regular";
 import { getUserMeSimpleOptions } from "@/query/options/user";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { deleteUserMe } from "@/api/authenticated/user";
 
 export function UserPage() {
   const navigate = useNavigate();
   const { data: mypageData } = useSuspenseQuery(getRegularMypageOptions());
   const { data: userData } = useSuspenseQuery(getUserMeSimpleOptions());
+  const { mutate: deleteUser } = useMutation({
+    mutationFn: () => deleteUserMe(),
+    onSuccess: () => {
+      localStorage.clear();
+      navigate("/login");
+    },
+  });
   return (
     <div className="w-full min-h-screen bg-gray-30">
       <header className="w-full py-[11px] flex items-center justify-center">
@@ -99,7 +107,12 @@ export function UserPage() {
             로그아웃
           </Button>
           <div className="h-[1px] bg-gray-50" />
-          <Button className="p-5 w-full flex item-start">회원탈퇴</Button>
+          <Button
+            className="p-5 w-full flex item-start"
+            onClick={() => deleteUser}
+          >
+            회원탈퇴
+          </Button>
         </div>
       </div>
       <Footer />
