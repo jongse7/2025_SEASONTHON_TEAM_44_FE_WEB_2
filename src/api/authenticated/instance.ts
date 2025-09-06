@@ -5,8 +5,8 @@ export const authenticatedApi = api.extend({
   retry: {
     limit: 2,
     methods: ["get", "post", "put", "delete", "options", "trace"],
-    statusCodes: [401],
-    afterStatusCodes: [401],
+    statusCodes: [401, 404],
+    afterStatusCodes: [401, 404],
   },
   hooks: {
     beforeRequest: [
@@ -19,14 +19,22 @@ export const authenticatedApi = api.extend({
     ],
     beforeRetry: [
       async ({ request, error }) => {
-        if (error instanceof HTTPError && error.response.status === 401) {
-          try {
-            const accessToken = import.meta.env.VITE_ACCESSTOKEN;
-            if (accessToken) {
-              request.headers.set("Authorization", `Bearer ${accessToken}`);
+        if (error instanceof HTTPError) {
+          const status = error.response.status;
+          if (status === 401) {
+            try {
+              const accessToken = import.meta.env.VITE_ACCESSTOKEN;
+              if (accessToken) {
+                request.headers.set("Authorization", `Bearer ${accessToken}`);
+              }
+            } catch (err) {
+              console.error(err);
+              localStorage.removeItem("accessToken");
+              window.location.href = "/login";
             }
-          } catch (error) {
-            console.error(error);
+          }
+          if (status === 404) {
+            localStorage.removeItem("accessToken");
             window.location.href = "/login";
           }
         }
