@@ -56,7 +56,7 @@ export const MainPage = () => {
       <article className="w-full py-[5px]">
         <img src="/images/main/article.png" alt="article" />
       </article>
-      <main className="w-full px-5 py-[5px] h-full flex flex-col items-center">
+      <main className="w-full px-5 py-[5px] flex flex-col items-center">
         <div className="w-full flex flex-row justify-between">
           <div className="w-full flex flex-row gap-[5px] items-center">
             <h2 className="text-sub1 text-black">나의 단골가게</h2>
@@ -84,19 +84,11 @@ export const MainPage = () => {
             )}
           </div>
         </div>
-        {posts.length === 0 ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <p className="text-body1 text-gray-400">
-              최근 방문한 가게가 없습니다.
-            </p>
-          </div>
-        ) : (
-          <div className="w-full flex flex-col gap-[10px] mt-[5px]">
-            {posts.map((post) => (
-              <PostCard key={post.storeId} post={post} />
-            ))}
-          </div>
-        )}
+        <div className="w-full flex flex-col gap-[10px] mt-[5px]">
+          {posts.map((post) => (
+            <PostCard key={post.storeId} post={post} />
+          ))}
+        </div>
       </main>
       <Footer />
     </div>

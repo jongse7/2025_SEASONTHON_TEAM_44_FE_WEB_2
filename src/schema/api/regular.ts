@@ -7,18 +7,16 @@ export const getRegularStoreIdDetailResponseSchema = z.object({
     phone: z.string(),
     address: z.string(),
     detailAddress: z.string(),
-    open: z.number(),
-    close: z.number(),
+    open: z.string(),
+    close: z.string(),
     imageUrl: z.string(),
     availableStamp: z.number(),
-    latestNoti: z
-      .object({
-        id: z.number(),
-        title: z.string(),
-        content: z.string(),
-        createdAt: z.string(),
-      })
-      .optional(),
+    latestNoti: z.object({
+      id: z.number(),
+      title: z.string(),
+      content: z.string(),
+      createdAt: z.string(),
+    }),
   }),
 });
 
@@ -86,3 +84,7 @@ export type GetRegularMainResponse = z.infer<
 >;
 
 export type GetRegularMainStore = z.infer<typeof getRegularMainStoreSchema>;
+
+export const getRegularStoreIdResponseSchema = z.object({
+  response: z.boolean(),
+});

@@ -32,7 +32,6 @@ export const LocationPage = () => {
       | LocationData
       | undefined;
     if (selectedLocation) {
-      console.log("선택된 위치 감지:", selectedLocation);
       handleLocationSelected(
         selectedLocation.latitude,
         selectedLocation.longitude

@@ -8,9 +8,10 @@ import {
   type GetRegularCouponResponse,
   type GetRegularMainResponse,
   getRegularMainResponseSchema,
+  getRegularStoreIdResponseSchema,
 } from "@/schema/api/regular";
 
-export const postRegularStoreStamp = async (storeId: string) => {
+export const postRegularStoreStamp = async (storeId: number) => {
   await authenticatedApi
     .post(`regular/store/stamp`, {
       json: {
@@ -28,6 +29,15 @@ export const postRegularNotiRead = async (notiId: number) => {
       },
     })
     .json();
+};
+
+export const getRegularStoreId = async (storeId: number) => {
+  const response = await authenticatedApi.get(`regular/${storeId}`).json();
+  return getRegularStoreIdResponseSchema.parse(response);
+};
+
+export const postRegularStoreId = async (storeId: number) => {
+  await authenticatedApi.post(`regular/${storeId}`);
 };
 
 export const postRegularCouponStampId = async (stampId: number) => {

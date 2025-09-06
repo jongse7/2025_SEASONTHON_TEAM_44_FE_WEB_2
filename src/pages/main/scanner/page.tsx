@@ -5,7 +5,6 @@ export default function ScannerPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const qrScannerRef = useRef<QrScanner | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-  const [scanResult, setScanResult] = useState<string>("");
 
   useEffect(() => {
     let isInitialized = false;
@@ -30,9 +29,6 @@ export default function ScannerPage() {
         qrScannerRef.current = new QrScanner(
           videoRef.current,
           (result) => {
-            console.log("QR 스캔 결과:", result.data);
-            setScanResult(result.data);
-
             if (result.data.startsWith("http")) {
               window.location.href = result.data;
             }
@@ -93,13 +89,6 @@ export default function ScannerPage() {
         muted
         autoPlay
       />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <img
-          src="/images/main/scanner.png"
-          alt="QR Scanner"
-          className="w-64 h-64 z-10"
-        />
-      </div>
 
       <div className="absolute top-20 left-0 right-0 text-center z-20">
         <p className="text-white text-lg font-medium">QR 코드 스캔</p>
@@ -109,11 +98,6 @@ export default function ScannerPage() {
         <p className="text-white text-lg font-medium">
           QR 코드를 스캐너 안에 맞춰주세요
         </p>
-        {scanResult && (
-          <p className="text-green-400 text-sm mt-2">
-            스캔됨: {scanResult.substring(0, 50)}...
-          </p>
-        )}
       </div>
 
       {hasPermission === null && (
