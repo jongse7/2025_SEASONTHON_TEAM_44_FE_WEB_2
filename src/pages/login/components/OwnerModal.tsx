@@ -1,8 +1,6 @@
 import Button from "@/components/Button";
 import Space from "@/components/Space";
 import X from "@/components/svg/X";
-import Toast from "@/components/Toast";
-import { useModal } from "@/hooks/useModal";
 
 interface OwnerModalProps {
   isOpen: boolean;
@@ -10,8 +8,6 @@ interface OwnerModalProps {
 }
 
 export function OwnerModal({ isOpen, onClose }: OwnerModalProps) {
-  const { openModal } = useModal();
-
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
@@ -41,12 +37,6 @@ export function OwnerModal({ isOpen, onClose }: OwnerModalProps) {
                     await navigator.clipboard.writeText(
                       "http://localhost:5173/owner"
                     );
-                    openModal(({ onClose }) => (
-                      <Toast
-                        label="클립보드에 복사되었습니다"
-                        onClose={onClose}
-                      />
-                    ));
                   } catch (error) {
                     console.error("복사 실패:", error);
                   }

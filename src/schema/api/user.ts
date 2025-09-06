@@ -13,7 +13,7 @@ export const PostUserLocationSchema = z.object({
 export const GetUserMeSimpleSchema = z.object({
   response: z.object({
     name: z.string(),
-    profileImageUrl: z.string(),
+    profileImageUrl: z.string().nullable(),
     region: z.string(),
   }),
 });

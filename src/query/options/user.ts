@@ -1,4 +1,4 @@
-import { getUserLocation } from "@/api/authenticated/user";
+import { getUserLocation, getUserMeSimple } from "@/api/authenticated/user";
 import { getCallback } from "@/api/auth";
 import { queryOptions } from "@tanstack/react-query";
 
@@ -16,5 +16,12 @@ export const getCallbackOptions = (code: string) => {
     enabled: !!code,
     retry: false,
     staleTime: Infinity,
+  });
+};
+
+export const getUserMeSimpleOptions = () => {
+  return queryOptions({
+    queryKey: ["userInfo"],
+    queryFn: () => getUserMeSimple(),
   });
 };

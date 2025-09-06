@@ -1,22 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@/components/Button";
 import Space from "@/components/Space";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { getUserLocationOptions } from "@/query/options/user";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { getGeocodeAddress } from "@/api/authenticated/location";
 import Toast from "@/components/Toast";
 import { useModal } from "@/hooks/useModal";
 import { postUserLocation } from "@/api/authenticated/user";
+import type { LocationData } from "@/schema/location";
 
 export const LocationPage = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { data } = useSuspenseQuery(getUserLocationOptions());
   const { mutate: patchLocation } = useMutation({
     mutationFn: (region: string) => postUserLocation(region),
     onSuccess: () => {
       navigate("/main");
+      location.state = undefined;
     },
     onError: () => {
       openModal(({ onClose }) => <Toast label="서버 에러" onClose={onClose} />);
@@ -24,9 +27,53 @@ export const LocationPage = () => {
   });
   const { openModal } = useModal();
 
+  useEffect(() => {
+    const selectedLocation = location.state?.selectedLocation as
+      | LocationData
+      | undefined;
+    if (selectedLocation) {
+      console.log("선택된 위치 감지:", selectedLocation);
+      handleLocationSelected(
+        selectedLocation.latitude,
+        selectedLocation.longitude
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
+
   if (data.response) {
     return <Navigate to="/main" replace />;
   }
+
+  const handleLocationSelected = async (lat: number, lng: number) => {
+    setLoading(true);
+    console.log("handleLocationSelected 실행:", { lat, lng });
+
+    try {
+      const addressResult = await getGeocodeAddress({
+        lat,
+        lng,
+      });
+
+      patchLocation(addressResult.response.address);
+      openModal(({ onClose }) => (
+        <Toast
+          label={`${addressResult.response.address}로 주소가 등록되었습니다.`}
+          onClose={onClose}
+        />
+      ));
+    } catch (error) {
+      console.error("주소 변환 실패:", error);
+      openModal(({ onClose }) => (
+        <Toast
+          label="주소 변환에 실패했습니다. 다시 시도해주세요."
+          onClose={onClose}
+        />
+      ));
+    }
+
+    setLoading(false);
+  };
 
   const getCurrentLocation = () => {
     setLoading(true);
@@ -51,20 +98,7 @@ export const LocationPage = () => {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-
-        const addressResult = await getGeocodeAddress({
-          lat: latitude,
-          lng: longitude,
-        });
-        patchLocation(addressResult.response.address);
-        openModal(({ onClose }) => (
-          <Toast
-            label={`${addressResult.response.address}로 주소가 등록되었습니다.`}
-            onClose={onClose}
-          />
-        ));
-
-        setLoading(false);
+        await handleLocationSelected(latitude, longitude);
       },
       (error) => {
         let errorMessage;
@@ -93,6 +127,10 @@ export const LocationPage = () => {
     );
   };
 
+  const handleSearchLocation = () => {
+    navigate("/location/kakao-map");
+  };
+
   return (
     <main className="w-full h-screen flex flex-col items-center justify-end">
       <h1 className="text-h3 text-black text-center">
@@ -108,8 +146,12 @@ export const LocationPage = () => {
       />
 
       <div className="px-5 w-full gap-[5px] flex flex-col">
-        <Button className="w-full text-button1 text-gray-800 py-[17px] bg-primary-50 rounded-[12px] disabled:bg-gray-200 disabled:text-gray-400">
-          {"동 검색하기"}
+        <Button
+          className="w-full text-button1 text-gray-800 py-[17px] bg-primary-50 rounded-[12px] disabled:bg-gray-200 disabled:text-gray-400"
+          onClick={handleSearchLocation}
+          disabled={loading}
+        >
+          {loading ? "처리 중..." : "동 검색하기"}
         </Button>
         <Button
           className="w-full text-button1 py-[17px] bg-primary-500 text-white rounded-[12px] disabled:bg-primary-300"

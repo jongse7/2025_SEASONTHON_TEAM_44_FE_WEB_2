@@ -4,9 +4,10 @@ import { MainPage } from "@/pages/main/page";
 import { StorePage } from "@/pages/main/[id]/page";
 import { UserPage } from "@/pages/user/page";
 import { CouponPage } from "@/pages/user/coupon/page";
-import { LocationPage } from "@/pages/location/page";
 import Layout from "@/route/Layout";
 import OnboardingPage from "@/pages/onboadring/page";
+import { KakaoMapPage } from "@/pages/location/kakao-map/page";
+import { LocationPage } from "@/pages/location/page";
 
 export function MainRoute() {
   return (
@@ -19,6 +20,7 @@ export function MainRoute() {
         <Route path="/user" element={<UserPage />} />
         <Route path="/user/coupon" element={<CouponPage />} />
         <Route path="/location" element={<LocationPage />} />
+        <Route path="/location/kakao-map" element={<KakaoMapPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
       </Route>
     </Routes>

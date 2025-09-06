@@ -13,15 +13,15 @@ export function CouponPage() {
   };
 
   return (
-    <div className="w-full min-h-screen px-5">
-      <header className="py-3 flex flex-row items-center justify-between">
+    <div className="w-full min-h-screen">
+      <header className="py-3 flex flex-row px-5 items-center justify-between">
         <Link to="/user">
           <Pop />
         </Link>
         <h1 className="text-sub1">내 쿠폰함</h1>
         <Space className="w-[20px]" />
       </header>
-      <main className="bg-gray w-full h-full">
+      <main className="bg-gray w-full h-full bg-gray-30 px-5">
         <div className="flex flex-row items-center justify-start">
           <Tab
             isActive={tab === "my-coupon"}

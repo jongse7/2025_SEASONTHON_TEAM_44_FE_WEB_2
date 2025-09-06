@@ -2,10 +2,24 @@ import Button from "@/components/Button";
 import Footer from "@/components/Footer";
 import Space from "@/components/Space";
 import Pop from "@/components/svg/Pop";
+import StoreCard from "@/pages/user/components/StoreCard";
+import {
+  getRegularMainOptions,
+  getRegularMypageOptions,
+} from "@/query/options/regular";
+import { getUserMeSimpleOptions } from "@/query/options/user";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 export function UserPage() {
   const navigate = useNavigate();
+  const { data: mypageData } = useSuspenseQuery(getRegularMypageOptions());
+  const { data: userData } = useSuspenseQuery(getUserMeSimpleOptions());
+  const { data: mainData } = useSuspenseQuery(getRegularMainOptions());
+  const allPosts = mainData.response.storeList;
+  const posts = [...allPosts].sort((a, b) => {
+    return new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime();
+  });
   return (
     <div className="w-full min-h-screen bg-gray-30">
       <header className="w-full py-[11px] flex items-center justify-center">
@@ -15,38 +29,49 @@ export function UserPage() {
         <div className="w-full px-5 py-6 flex flex-row items-start justify-between rounded-[12px] bg-white">
           <div className="flex w-full justify-between items-start">
             <div className="flex gap-[10px] items-center">
-              <img
-                src="/images/user.png"
-                className="size-[50px] rounded-full"
-              ></img>
+              <div className="size-[50px] rounded-full bg-gray-30">
+                <img
+                  src="/images/user.png"
+                  className="size-[50px] rounded-full"
+                ></img>
+              </div>
               <div className="flex-1">
-                <h2 className="text-sub2 text-black">다시온님</h2>
-                <p className="text-body2 text-gray-600">분당구 판교동</p>
+                <h2 className="text-sub2 text-black">
+                  {userData.response.name}님
+                </h2>
+                <p className="text-body2 text-gray-600">
+                  {userData.response.region}
+                </p>
               </div>
             </div>
-            <button className="px-2.5 py-[6px] bg-gray-50 items-center justify-center flex rounded-[12px]">
+            {/* <button className="px-2.5 py-[6px] bg-gray-50 items-center justify-center flex rounded-[12px]">
               <span className="text-button2 text-gray-600">프로필 수정</span>
-            </button>
+            </button> */}
           </div>
         </div>
       </main>
-      <Space className="h-6" />
       <div className="w-full px-5">
         <div className="flex gap-4">
           <div className="flex-1 bg-white rounded-xl p-4 flex flex-col items-center">
             <img src="/images/user/store.png" className="size-[50px]" />
             <p className="text-body1 text-black mb-1">단골 가게</p>
-            <p className="text-sub1 text-primary-500">6</p>
+            <p className="text-sub1 text-primary-500">
+              {mypageData.response.storeCount}
+            </p>
           </div>
           <div className="flex-1 bg-white rounded-xl p-4 flex flex-col items-center">
             <img src="/images/user/stamp.png" className="size-[50px]" />
             <p className="text-body1 text-black mb-1">스탬프 적립</p>
-            <p className="text-sub1 text-primary-500">23</p>
+            <p className="text-sub1 text-primary-500">
+              {mypageData.response.totalStamp}
+            </p>
           </div>
           <div className="flex-1 bg-white rounded-xl p-4 flex flex-col items-center">
             <img src="/images/user/sales.png" className="size-[50px]" />
             <p className="text-body1 text-black mb-1">보유 쿠폰</p>
-            <p className="text-sub1 text-primary-500">2</p>
+            <p className="text-sub1 text-primary-500">
+              {mypageData.response.couponCount}
+            </p>
           </div>
         </div>
         <Space className="h-[10px]" />
@@ -60,23 +85,25 @@ export function UserPage() {
           <Pop className="rotate-180" />
         </div>
         <h3 className="text-sub1 text-black my-[10px]">최근 방문</h3>
-        <div className="bg-white rounded-xl py-[15px] px-[10px]">
-          <div className="flex items-center gap-4">
-            <img
-              src="https://picsum.photos/400/300"
-              className="w-[100px] h-[65px] object-cover rounded-[12px]"
-            />
-            <div className="flex-1 gap-[2px] flex flex-col">
-              <h4 className="text-sub2 text-black">다시온 베이커리</h4>
-              <p className="text-body4 text-gray-500">어제 방문</p>
-              <p className="text-body3 text-primary-400">
-                7개만 더 모으면 쿠폰 발급!
-              </p>
-            </div>
+        {posts.length === 0 ? (
+          <div className="w-full h-[100px] flex items-center justify-center">
+            <p className="text-body1 text-gray-400">
+              최근 방문한 가게가 없습니다.
+            </p>
           </div>
-        </div>
-        <div className="flex w-full text-gray-400 text-body3 bottom-[90px] fixed flex-col">
-          <Button className="p-5 w-full flex item-start">로그아웃</Button>
+        ) : (
+          posts.map((post) => <StoreCard key={post.storeId} store={post} />)
+        )}
+        <div className="flex w-full text-gray-400 text-body3 flex-col">
+          <Button
+            className="p-5 w-full flex item-start"
+            onClick={() => {
+              localStorage.removeItem("accessToken");
+              navigate("/login");
+            }}
+          >
+            로그아웃
+          </Button>
           <div className="h-[1px] bg-gray-50" />
           <Button className="p-5 w-full flex item-start">회원탈퇴</Button>
         </div>
