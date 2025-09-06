@@ -13,12 +13,14 @@ export const getRegularStoreIdDetailResponseSchema = z.object({
     close: z.string(),
     imageUrl: z.string(),
     availableStamp: z.number().transform((stamp) => stamp % 10),
-    latestNoti: z.object({
-      id: z.number(),
-      title: z.string(),
-      content: z.string(),
-      createdAt: z.string(),
-    }),
+    latestNoti: z
+      .object({
+        id: z.number(),
+        title: z.string(),
+        content: z.string(),
+        createdAt: z.string(),
+      })
+      .nullable(),
   }),
 });
 
