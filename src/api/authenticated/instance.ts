@@ -11,7 +11,7 @@ export const authenticatedApi = api.extend({
   hooks: {
     beforeRequest: [
       (request) => {
-        const accessToken = import.meta.env.VITE_ACCESSTOKEN;
+        const accessToken = localStorage.getItem("accessToken");
         if (accessToken) {
           request.headers.set("Authorization", `Bearer ${accessToken}`);
         }
