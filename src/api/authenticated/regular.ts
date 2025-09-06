@@ -41,13 +41,7 @@ export const postRegularStoreId = async (storeId: number) => {
 };
 
 export const postRegularCouponStampId = async (stampId: number) => {
-  await authenticatedApi
-    .post("regular/coupon", {
-      json: {
-        stampId,
-      },
-    })
-    .json();
+  await authenticatedApi.post(`regular/coupon/${stampId}`).json();
 };
 
 export const getRegularStoreIdDetail = async (

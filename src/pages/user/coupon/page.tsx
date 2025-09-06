@@ -1,10 +1,14 @@
 import Space from "@/components/Space";
 import Pop from "@/components/svg/Pop";
 import Tab from "@/components/Tab";
+import CouponCard from "@/pages/user/coupon/components/CouponCard";
+import { getRegularCouponOptions } from "@/query/options/regular";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useSearchParams, Link } from "react-router-dom";
 
 export function CouponPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { data: coupons } = useSuspenseQuery(getRegularCouponOptions());
   const tab =
     (searchParams.get("tab") as "my-coupon" | "schedule-coupon") || "my-coupon";
 
@@ -35,6 +39,25 @@ export function CouponPage() {
           >
             예정 쿠폰
           </Tab>
+        </div>
+        <div className="flex flex-col gap-[5px] py-[10px]">
+          {coupons.response.map((coupon) =>
+            tab === "my-coupon" ? (
+              Array.from({ length: coupon.couponCount }).map((_, idx) => (
+                <CouponCard
+                  key={`${coupon.stampId}-${idx}`}
+                  coupon={coupon}
+                  isCoupon
+                />
+              ))
+            ) : (
+              <CouponCard
+                key={coupon.stampId}
+                coupon={coupon}
+                isCoupon={false}
+              />
+            )
+          )}
         </div>
       </main>
     </div>

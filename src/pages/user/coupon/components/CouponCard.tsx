@@ -1,28 +1,61 @@
-import type { GetRegularCouponResponse } from "@/schema/api/regular";
+import { useModal } from "@/hooks/useModal";
+import { CouponModal } from "@/pages/user/coupon/components/CouponModal";
+import type { CouponType } from "@/schema/api/regular";
+import { cn } from "@/utils/cn";
 
 interface CouponCardProps {
-  coupon: GetRegularCouponResponse;
+  coupon: CouponType;
+  isCoupon: boolean;
 }
 
-export default function CouponCard({ coupon }: CouponCardProps) {
+export default function CouponCard({ coupon, isCoupon }: CouponCardProps) {
+  const { openModal } = useModal();
+  const progressPercentage = (coupon.availableStamp / 10) * 100;
   return (
-    <div className="px-[10px] py-[15px] rounded-[12px] border-2 border-gary-50 flex flex-row gap-[26px] w-full">
+    <div className="px-[10px] py-[15px] rounded-[12px] items-center border-2 justify-between border-gray-50 flex flex-row gap-[26px] w-full">
       <div className="flex flex-row gap-[10px]">
         <img
           src={coupon.storeImage}
           alt={coupon.storeName}
           className="w-[100px] h-[65px] object-cover rounded-[12px]"
         />
-        <div className="flex-1 flex flex-col py-[9.5px] gap-[5px]">
+        <div
+          className={cn(
+            "flex-1 flex flex-col justify-center gap-[5px]",
+            isCoupon && "py-[9.5px]"
+          )}
+        >
           <h4 className="text-sub2 text-black">{coupon.storeName}</h4>
+          {!isCoupon && (
+            <div className="w-[135px] h-[5px] bg-gray-100 rounded-[12px] overflow-hidden">
+              <div
+                className="h-full bg-primary-500 rounded-[12px] transition-all duration-300"
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+          )}
           <p className="text-body3 text-primary-400">
-            쿠폰까지 {coupon.availableStamp}개 남았어요
+            {isCoupon
+              ? `10회 인증 쿠폰`
+              : `쿠폰까지 ${10 - coupon.availableStamp}개 남았어요`}
           </p>
         </div>
       </div>
-      {coupon.availableStamp === 0 && (
-        <button className="px-2.5 py-[5px] bg-primary-500 text-white items-center justify-center flex rounded-[12px]">
-          <p>사용하기</p>
+      {isCoupon && (
+        <button
+          className="px-2.5 py-[5px] bg-primary-500 h-fit w-fit text-white items-center justify-center flex rounded-[6px]"
+          onClick={() =>
+            openModal(({ isOpen, onClose }) => (
+              <CouponModal
+                isOpen={isOpen}
+                onClose={onClose}
+                storeName={coupon.storeName}
+                stampId={coupon.stampId}
+              />
+            ))
+          }
+        >
+          <p className="text-button2">사용하기</p>
         </button>
       )}
     </div>

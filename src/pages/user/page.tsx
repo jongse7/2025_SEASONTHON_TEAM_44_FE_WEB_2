@@ -3,10 +3,7 @@ import Footer from "@/components/Footer";
 import Space from "@/components/Space";
 import Pop from "@/components/svg/Pop";
 import StoreCard from "@/pages/user/components/StoreCard";
-import {
-  getRegularMainOptions,
-  getRegularMypageOptions,
-} from "@/query/options/regular";
+import { getRegularMypageOptions } from "@/query/options/regular";
 import { getUserMeSimpleOptions } from "@/query/options/user";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -15,11 +12,6 @@ export function UserPage() {
   const navigate = useNavigate();
   const { data: mypageData } = useSuspenseQuery(getRegularMypageOptions());
   const { data: userData } = useSuspenseQuery(getUserMeSimpleOptions());
-  const { data: mainData } = useSuspenseQuery(getRegularMainOptions());
-  const allPosts = mainData.response.storeList;
-  const posts = [...allPosts].sort((a, b) => {
-    return new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime();
-  });
   return (
     <div className="w-full min-h-screen bg-gray-30">
       <header className="w-full py-[11px] flex items-center justify-center">
@@ -85,14 +77,16 @@ export function UserPage() {
           <Pop className="rotate-180" />
         </div>
         <h3 className="text-sub1 text-black my-[10px]">최근 방문</h3>
-        {posts.length === 0 ? (
+        {mypageData.response.recentStores.length === 0 ? (
           <div className="w-full h-[100px] flex items-center justify-center">
             <p className="text-body1 text-gray-400">
               최근 방문한 가게가 없습니다.
             </p>
           </div>
         ) : (
-          posts.map((post) => <StoreCard key={post.storeId} store={post} />)
+          mypageData.response.recentStores.map((store) => (
+            <StoreCard key={store.storeId} store={store} />
+          ))
         )}
         <div className="flex w-full text-gray-400 text-body3 flex-col">
           <Button
