@@ -109,7 +109,7 @@ export function UserPage() {
           <div className="h-[1px] bg-gray-50" />
           <Button
             className="p-5 w-full flex item-start"
-            onClick={() => deleteUser}
+            onClick={() => deleteUser()}
           >
             회원탈퇴
           </Button>

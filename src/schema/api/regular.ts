@@ -79,12 +79,16 @@ const getRegularMainStoreSchema = z.object({
   storeId: z.number(),
   storeName: z.string(),
   imageUrl: z.string(),
-  lastVisit: z.string().transform((dateString) => {
-    const date = new Date(dateString);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${month}/${day}`;
-  }),
+  lastVisit: z
+    .string()
+    .nullable()
+    .transform((dateString) => {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${month}/${day}`;
+    }),
   visitCount: z.number(),
   availableStamp: z.number().transform((stamp) => stamp % 10),
   hasNewNoti: z.boolean(),
