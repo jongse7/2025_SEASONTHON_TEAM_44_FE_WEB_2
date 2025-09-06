@@ -20,18 +20,8 @@ export default function Footer() {
     navigate("/user", { replace: true });
   };
 
-  const handleQRClick = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: "environment",
-        },
-      });
-      stream.getTracks().forEach((track) => track.stop());
-    } catch (error) {
-      console.error("카메라 접근 실패:", error);
-      alert("카메라에 접근할 수 없습니다. 카메라 권한을 확인해주세요.");
-    }
+  const handleQRClick = () => {
+    navigate("/main/scanner");
   };
 
   return (

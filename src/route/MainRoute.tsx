@@ -8,6 +8,7 @@ import Layout from "@/route/Layout";
 import OnboardingPage from "@/pages/onboadring/page";
 import { KakaoMapPage } from "@/pages/location/kakao-map/page";
 import { LocationPage } from "@/pages/location/page";
+import ScannerPage from "@/pages/main/scanner/page";
 
 export function MainRoute() {
   return (
@@ -22,6 +23,7 @@ export function MainRoute() {
         <Route path="/location" element={<LocationPage />} />
         <Route path="/location/kakao-map" element={<KakaoMapPage />} />
         <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route path="/main/scanner" element={<ScannerPage />} />
       </Route>
     </Routes>
   );
