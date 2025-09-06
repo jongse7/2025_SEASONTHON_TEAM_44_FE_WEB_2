@@ -132,7 +132,7 @@ export function StorePage() {
           <div className="flex flex-col w-full gap-[15px] items-center justify-center">
             <div className="border-2 w-full border-primary-200 flex flex-col gap-5 rounded-[20px] p-[20px]">
               <div className="flex flex-row justify-start gap-[15px] items-center">
-                <div className="rounded-[12px] bg-primary-700 text-white text-body3 p-[10px] justify-items-center flex">
+                <div className="rounded-[12px] bg-primary-700 whitespace-nowrap text-white text-body3 p-[10px] justify-items-center flex">
                   새로운공지
                 </div>
                 <p className="text-sub1 text-black">
