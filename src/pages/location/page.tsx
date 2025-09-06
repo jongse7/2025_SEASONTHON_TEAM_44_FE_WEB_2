@@ -57,7 +57,7 @@ export const LocationPage = () => {
       patchLocation(addressResult.response.address);
       openModal(({ onClose }) => (
         <Toast
-          label={`${addressResult.response.address}로 주소가 등록되었습니다.`}
+          label={`${addressResult.response.address}(으)로 주소가 등록되었습니다.`}
           onClose={onClose}
         />
       ));

@@ -69,6 +69,8 @@ export function StorePage() {
   useEffect(() => {
     if (!isStore?.response) {
       postDasion();
+    } else {
+      postStamp();
     }
   }, [isStore, postDasion]);
 
@@ -120,12 +122,12 @@ export function StorePage() {
             <p className="text-body4">{`${storeDetail.availableStamp} / 10`}</p>
           </div>
         </div>
-        <Button
+        {/* <Button
           className="w-full text-button1 text-white py-[17px] bg-primary-500 rounded-[12px]"
           onClick={() => postStamp()}
         >
           스탬프 찍기
-        </Button>
+        </Button> */}
         {storeDetail.latestNoti && (
           <div className="flex flex-col w-full gap-[15px] items-center justify-center">
             <div className="border-2 w-full border-primary-200 flex flex-col gap-5 rounded-[20px] p-[20px]">
