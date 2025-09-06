@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { type ReactNode, useCallback, useEffect, useState } from 'react';
+
 import { overlay } from 'overlay-kit';
 
 interface UseModalOptions {

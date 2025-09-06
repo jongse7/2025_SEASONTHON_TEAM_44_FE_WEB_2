@@ -8,40 +8,96 @@
   --color-primary-400: #ff7d76;
   --color-primary-500: #ff645b;
   --color-primary-700: #f36d45;
-  --color-primary-gradient: linear-gradient(
-    90deg,
-    #ff714d 0%,
-    #ff635b 50%,
-    #ff8973 100%
-  );
   --color-gray-800: #3d3b3a;
   --color-gray-600: #605e5d;
   --color-gray-500: #7f7d7d;
   --color-gray-400: #a8a4a3;
   --color-gray-200: #c8c5c4;
-  --color-gray-100: #d8d4d3;
+  --color-gray-100: #f0eae6;
   --color-gray-50: #f0eae6;
   --color-gray-30: #f8f4f2;
   --color-white: #fefcfb;
   --color-black: #1b1b1b;
   --color-blue: #4d7dff;
   --color-black-20: rgba(27, 27, 27, 0.2);
-  --text-h1: 700 40px/130%;
-  --text-h2: 600 32px/130%;
-  --text-h3: 600 24px/130%;
-  --text-sub1: 600 20px/130%;
-  --text-sub2: 600 18px/130%;
-  --text-body1: 600 16px/130%;
-  --text-body2: 500 16px/130%;
-  --text-body3: 600 14px/130%;
-  --text-body4: 500 14px/130%;
-  --text-button1: 600 16px/130%;
-  --text-button2: 600 12px/130%;
   --letter-spacing-tight: -0.02em;
   --custom-shadow: 0 5px 15px 0 rgba(103, 18, 18, 0.25);
 }
 
+.text-h1 {
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 130%;
+}
+
+.text-h2 {
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 130%;
+}
+
+.text-h3 {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 130%;
+}
+
+.text-sub1 {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 130%;
+}
+
+.text-sub2 {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 130%;
+}
+
+.text-body1 {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 130%;
+}
+
+.text-body2 {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 130%;
+}
+
+.text-body3 {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 130%;
+}
+
+.text-body4 {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 130%;
+}
+
+.text-button1 {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 130%;
+}
+
+.text-button2 {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 130%;
+}
 body {
   font-family: var(--font-pretendard);
   letter-spacing: var(--letter-spacing-tight);
+}
+@layer base {
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
 }
