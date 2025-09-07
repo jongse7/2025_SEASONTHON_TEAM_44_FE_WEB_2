@@ -24,6 +24,7 @@ pnpm dev
 - **React Router Dom** - 라우팅
 - **TanStack Query** - 서버 상태 관리
 - **Zustand** - 클라이언트 상태 관리
+- **KY** - 네트워크
 
 ### 폼 & 검증
 
