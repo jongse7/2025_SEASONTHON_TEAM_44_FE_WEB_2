@@ -1,5 +1,5 @@
-import { OverlayProvider } from "overlay-kit";
-import { Navigate, Outlet } from "react-router-dom";
+import { OverlayProvider } from 'overlay-kit';
+import { Navigate, Outlet } from 'react-router-dom';
 
 export default function Layout() {
   return (
@@ -12,7 +12,7 @@ export default function Layout() {
 }
 
 export function ProtectedRoute() {
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem('accessToken');
   if (!token) {
     return <Navigate to="/login" replace />;
   }
@@ -20,7 +20,7 @@ export function ProtectedRoute() {
 }
 
 export function PublicRoute() {
-  const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem('accessToken');
   if (token) {
     return <Navigate to="/main" replace />;
   }

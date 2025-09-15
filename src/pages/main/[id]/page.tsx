@@ -23,7 +23,6 @@ export function StorePage() {
   const [searchParams] = useSearchParams();
   const id = Number(storeId);
 
-  // 카메라 스캔을 통한 진입인지 확인
   const isFromScanner = searchParams.get('from') === 'scanner';
 
   const { data: isStore } = useSuspenseQuery(getStoreRegularOptions(id));
@@ -31,12 +30,15 @@ export function StorePage() {
 
   const storeDetail = data.response;
 
-  const { mutate: postDasion } = useMutation({
+  const { mutate: postDasion, isIdle } = useMutation({
     mutationFn: () => postStoreRegister(id),
     onSuccess: () => {
       openModal(({ onClose }) => (
         <Toast label="단골 등록 성공" onClose={onClose} />
       ));
+      queryClient.invalidateQueries({
+        queryKey: ['regular', storeId],
+      });
     },
   });
   const { mutate: postStamp } = useMutation({
@@ -67,11 +69,11 @@ export function StorePage() {
     if (isStore.response === false) {
       postDasion();
     } else {
-      if (isFromScanner) {
+      if (isFromScanner && isIdle) {
         postStamp();
       }
     }
-  }, [isStore, postDasion, isFromScanner, postStamp]);
+  }, [isStore, postDasion, isFromScanner, postStamp, isIdle]);
 
   const handleBackClick = () => {
     navigate('/main');

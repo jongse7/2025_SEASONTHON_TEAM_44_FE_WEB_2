@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const GetUserLocationSchema = z.object({
   response: z.boolean(),
@@ -14,7 +14,7 @@ export const GetUserMeSimpleSchema = z.object({
   response: z.object({
     name: z.string(),
     profileImageUrl: z.string().nullable(),
-    region: z.string(),
+    region: z.string().nullable(),
   }),
 });
 

@@ -30,7 +30,7 @@ export default function PostCard({ post }: PostCardProps) {
       <div className="w-full flex flex-col gap-[5px] px-[20px] py-[16px]">
         <h3 className="text-sub2 text-black">{post.storeName}</h3>
         <div className="text-gray-500 text-body4 bg-white w-full flex flex-row justify-between">
-          <p>{post.lastVisit}</p>
+          <p>마지막 방문: {post.lastVisit}</p>
           <p>방문횟수: {post.availableStamp}회/10회</p>
         </div>
       </div>

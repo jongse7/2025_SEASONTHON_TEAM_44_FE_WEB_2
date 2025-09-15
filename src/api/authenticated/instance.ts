@@ -22,10 +22,10 @@ export const authenticatedApi = api.extend({
         if (error instanceof HTTPError) {
           const status = error.response.status;
           console.log(status);
-          // if (status === 403) {
-          //   localStorage.removeItem('accessToken');
-          //   window.location.href = '/login';
-          // }
+          if (status === 403 || status === 404) {
+            localStorage.removeItem('accessToken');
+            window.location.href = '/login';
+          }
         }
       },
     ],

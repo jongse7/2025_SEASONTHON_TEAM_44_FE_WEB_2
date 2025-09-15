@@ -1,41 +1,53 @@
-import Button from "@/components/Button";
-import Space from "@/components/Space";
-import LogoText from "@/components/svg/LogoText";
-import { useModal } from "@/hooks/useModal";
-import { OwnerModal } from "@/pages/login/components/OwnerModal";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { kakaoLoginOptions } from "@/query/options/user";
-import { useEffect } from "react";
+import Button from '@/components/Button';
+import Space from '@/components/Space';
+import LogoText from '@/components/svg/LogoText';
+import { useModal } from '@/hooks/useModal';
+import { OwnerModal } from '@/pages/login/components/OwnerModal';
+import { useQuery } from '@tanstack/react-query';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import {
+  kakaoLoginOptions,
+  getUserLocationOptions,
+} from '@/query/options/user';
+import { useEffect } from 'react';
 
 export const LoginPage = () => {
   const { openModal } = useModal();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const code = searchParams.get("code");
+  const code = searchParams.get('code');
 
-  const { data, isLoading, error } = useQuery(kakaoLoginOptions(code || ""));
+  const { data, isLoading, error } = useQuery(kakaoLoginOptions(code || ''));
+  const { data: locationData } = useQuery({
+    ...getUserLocationOptions(),
+    enabled: !!data?.response?.accessToken,
+  });
 
   useEffect(() => {
     if (data && code) {
-      localStorage.setItem("accessToken", data.response.accessToken);
-      localStorage.setItem("refreshToken", data.response.refreshToken);
-      navigate("/location", { replace: true });
+      localStorage.setItem('accessToken', data.response.accessToken);
+      localStorage.setItem('refreshToken', data.response.refreshToken);
+
+      if (locationData?.response) {
+        navigate('/main', { replace: true });
+      } else {
+        navigate('/location', { replace: true });
+      }
     }
-  }, [data, code, navigate]);
+  }, [data, code, navigate, locationData]);
 
   useEffect(() => {
     if (error && code) {
-      console.error("카카오 로그인 실패:", error);
-      navigate("/login", { replace: true });
+      console.error('카카오 로그인 실패:', error);
+      navigate('/login', { replace: true });
     }
   }, [error, code, navigate]);
 
   const handleKakaoLogin = () => {
     window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${
       import.meta.env.VITE_KAKAO_ID
-    }&redirect_uri=${encodeURIComponent(window.location.origin + "/login")}`;
+    }&redirect_uri=${encodeURIComponent(window.location.origin + '/login')}`;
   };
 
   const handleOwnerLogin = () => {
