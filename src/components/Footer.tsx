@@ -1,43 +1,43 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import Home from "./svg/Home";
-import User from "./svg/User";
-import QR from "./svg/QR";
-import Button from "@/components/Button";
+import { useLocation, useNavigate } from 'react-router-dom';
+import Home from './svg/Home';
+import User from './svg/User';
+import QR from './svg/QR';
+import Button from '@/components/Button';
 
 export default function Footer() {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPath = location.pathname;
 
-  const isHomeActive = currentPath.includes("/main");
-  const isUserActive = currentPath.includes("/user");
+  const isHomeActive = currentPath.includes('/main');
+  const isUserActive = currentPath.includes('/user');
 
   const handleHomeClick = () => {
-    navigate("/main", { replace: true });
+    navigate('/main', { replace: true });
   };
 
   const handleUserClick = () => {
-    navigate("/user", { replace: true });
+    navigate('/user', { replace: true });
   };
 
   const handleQRClick = () => {
-    navigate("/main/scanner");
+    navigate('/main/scanner');
   };
 
   return (
-    <footer className="fixed bottom-0 pt-[5px] pb-[32px] left-0 right-0 h-[85px] bg-white flex flex-row justify-between items-end z-50">
+    <footer className="fixed bottom-0 pt-[5px] pb-[32px] w-full h-[85px] bg-white flex flex-row max-w-[800px] mx-auto z-50">
       <div
         className="flex-1 flex-col items-center justify-center flex cursor-pointer"
         onClick={handleHomeClick}
       >
         <Home
           className={`size-[30px] ${
-            isHomeActive ? "text-gray-800" : "text-gray-200"
+            isHomeActive ? 'text-gray-800' : 'text-gray-200'
           }`}
         />
         <p
           className={`text-body4 ${
-            isHomeActive ? "text-gray-800" : "text-gray-200"
+            isHomeActive ? 'text-gray-800' : 'text-gray-200'
           }`}
         >
           홈
@@ -58,12 +58,12 @@ export default function Footer() {
       >
         <User
           className={`size-[30px] ${
-            isUserActive ? "text-gray-800" : "text-gray-200"
+            isUserActive ? 'text-gray-800' : 'text-gray-200'
           }`}
         />
         <p
           className={`text-body4 ${
-            isUserActive ? "text-gray-800" : "text-gray-200"
+            isUserActive ? 'text-gray-800' : 'text-gray-200'
           }`}
         >
           마이온
