@@ -7,7 +7,7 @@ import { Navigate, useNavigate, useLocation } from "react-router-dom";
 import { getGeocodeAddress } from "@/api/authenticated/location";
 import Toast from "@/components/Toast";
 import { useModal } from "@/hooks/useModal";
-import { postUserLocation } from "@/api/authenticated/user";
+import { postUsersLocation } from "@/api/authenticated/user";
 import type { LocationData } from "@/schema/location";
 
 export const LocationPage = () => {
@@ -16,7 +16,7 @@ export const LocationPage = () => {
   const location = useLocation();
   const { data } = useSuspenseQuery(getUserLocationOptions());
   const { mutate: patchLocation } = useMutation({
-    mutationFn: (region: string) => postUserLocation(region),
+    mutationFn: (region: string) => postUsersLocation(region),
     onSuccess: () => {
       navigate("/main");
       location.state = undefined;

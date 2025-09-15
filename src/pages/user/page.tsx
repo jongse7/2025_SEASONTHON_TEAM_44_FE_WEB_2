@@ -1,23 +1,24 @@
-import Button from "@/components/Button";
-import Footer from "@/components/Footer";
-import Space from "@/components/Space";
-import Pop from "@/components/svg/Pop";
-import StoreCard from "@/pages/user/components/StoreCard";
-import { getRegularMypageOptions } from "@/query/options/regular";
-import { getUserMeSimpleOptions } from "@/query/options/user";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { deleteUserMe } from "@/api/authenticated/user";
+import Button from '@/components/Button';
+import Footer from '@/components/Footer';
+import Space from '@/components/Space';
+import Pop from '@/components/svg/Pop';
+import StoreCard from '@/pages/user/components/StoreCard';
+import { getStampMypageOptions } from '@/query/options/stamp';
+import { getUserMeSimpleOptions } from '@/query/options/user';
+import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { deleteUsersMe } from '@/api/authenticated/user';
+import Location from '@/components/svg/Location';
 
 export function UserPage() {
   const navigate = useNavigate();
-  const { data: mypageData } = useSuspenseQuery(getRegularMypageOptions());
+  const { data: mypageData } = useSuspenseQuery(getStampMypageOptions());
   const { data: userData } = useSuspenseQuery(getUserMeSimpleOptions());
   const { mutate: deleteUser } = useMutation({
-    mutationFn: () => deleteUserMe(),
+    mutationFn: () => deleteUsersMe(),
     onSuccess: () => {
       localStorage.clear();
-      navigate("/login");
+      navigate('/login');
     },
   });
   return (
@@ -35,13 +36,14 @@ export function UserPage() {
                   className="size-[50px] rounded-full"
                 ></img>
               </div>
-              <div className="flex-1">
+              <div className="flex-1 gap-[5px] flex flex-col">
                 <h2 className="text-sub2 text-black">
                   {userData.response.name}님
                 </h2>
-                <p className="text-body2 text-gray-600">
+                <div className="text-body2 text-gray-600 w-full flex items-center gap-[1px]">
+                  <Location className="size-[19px] text-gray-600" />
                   {userData.response.region}
-                </p>
+                </div>
               </div>
             </div>
             {/* <button className="px-2.5 py-[6px] bg-gray-50 items-center justify-center flex rounded-[12px]">
@@ -77,15 +79,16 @@ export function UserPage() {
         <Space className="h-[10px]" />
         <div
           onClick={() => {
-            navigate("/user/coupon");
+            navigate('/user/coupon');
           }}
-          className="bg-white p-5 rounded-xl flex items-center justify-between"
+          className="bg-white p-5 rounded-xl cursor-pointer flex items-center justify-between"
         >
           <h3 className="text-body1 text-black">내 쿠폰함</h3>
           <Pop className="rotate-180" />
         </div>
         <h3 className="text-sub1 text-black my-[10px]">최근 방문</h3>
-        {mypageData.response.recentStores.length === 0 ? (
+        {!mypageData.response.recentStores ||
+        mypageData.response.recentStores.length === 0 ? (
           <div className="w-full h-[100px] flex items-center justify-center">
             <p className="text-body1 text-gray-400">
               최근 방문한 가게가 없습니다.
@@ -93,15 +96,15 @@ export function UserPage() {
           </div>
         ) : (
           mypageData.response.recentStores.map((store) => (
-            <StoreCard key={store.storeId} store={store} />
+            <StoreCard key={store!.storeId} store={store} />
           ))
         )}
         <div className="flex w-full text-gray-400 text-body3 flex-col">
           <Button
             className="p-5 w-full flex item-start"
             onClick={() => {
-              localStorage.removeItem("accessToken");
-              navigate("/login");
+              localStorage.removeItem('accessToken');
+              navigate('/login');
             }}
           >
             로그아웃

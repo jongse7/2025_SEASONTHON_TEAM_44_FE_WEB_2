@@ -7,14 +7,14 @@ import {
 } from "@/schema/api/user";
 import { authenticatedApi } from "./instance";
 
-export const getUserLocation = async (): Promise<GetUserLocation> => {
-  const response = await authenticatedApi.get("user/location").json();
+export const getUsersLocation = async (): Promise<GetUserLocation> => {
+  const response = await authenticatedApi.get("users/location").json();
   return GetUserLocationSchema.parse(response);
 };
 
-export const postUserLocation = async (region: string) => {
+export const postUsersLocation = async (region: string) => {
   const response = await authenticatedApi
-    .post("user/location", {
+    .post("users/location", {
       json: {
         region,
       },
@@ -23,11 +23,11 @@ export const postUserLocation = async (region: string) => {
   return PostUserLocationSchema.parse(response);
 };
 
-export const getUserMeSimple = async (): Promise<GetUserMeSimple> => {
-  const response = await authenticatedApi.get("user/me/simple").json();
+export const getUsersMeSimple = async (): Promise<GetUserMeSimple> => {
+  const response = await authenticatedApi.get("users/me/simple").json();
   return GetUserMeSimpleSchema.parse(response);
 };
 
-export const deleteUserMe = async () => {
-  await authenticatedApi.delete("user/me");
+export const deleteUsersMe = async () => {
+  await authenticatedApi.delete("users/me");
 };

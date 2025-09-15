@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import QrScanner from "qr-scanner";
+import { useEffect, useRef, useState } from 'react';
+import QrScanner from 'qr-scanner';
 
 export default function ScannerPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -29,22 +29,25 @@ export default function ScannerPage() {
         qrScannerRef.current = new QrScanner(
           videoRef.current,
           (result) => {
-            if (result.data.startsWith("http")) {
-              window.location.href = result.data;
+            if (result.data.startsWith('http')) {
+              // URL에 쿼리 파라미터 추가
+              const url = new URL(result.data);
+              url.searchParams.set('from', 'scanner');
+              window.location.href = url.toString();
             }
           },
           {
             returnDetailedScanResult: true,
             highlightScanRegion: true,
             highlightCodeOutline: true,
-            preferredCamera: "environment",
-          }
+            preferredCamera: 'environment',
+          },
         );
 
         await qrScannerRef.current.start();
         setHasPermission(true);
       } catch (error) {
-        console.error("QR 스캐너 초기화 실패:", error);
+        console.error('QR 스캐너 초기화 실패:', error);
         setHasPermission(false);
       }
     };

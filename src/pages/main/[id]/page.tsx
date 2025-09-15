@@ -1,40 +1,38 @@
-import {
-  postRegularNotiRead,
-  postRegularStoreId,
-  postRegularStoreStamp,
-} from "@/api/authenticated/regular";
-import Button from "@/components/Button";
-import Space from "@/components/Space";
-import Pop from "@/components/svg/Pop";
-import Toast from "@/components/Toast";
-import { useModal } from "@/hooks/useModal";
-import {
-  getRegularStoreIdDetailOptions,
-  getRegularStoreIdOptions,
-} from "@/query/options/regular";
+import { postNotiRead } from '@/api/authenticated/noti';
+import { postStoreRegister, postStoreVisit } from '@/api/authenticated/store';
+import Button from '@/components/Button';
+import Space from '@/components/Space';
+import Pop from '@/components/svg/Pop';
+import Toast from '@/components/Toast';
+import { useModal } from '@/hooks/useModal';
+import { getStampStoreDetailOptions } from '@/query/options/stamp';
+import { getStoreRegularOptions } from '@/query/options/store';
 import {
   useMutation,
   useQueryClient,
   useSuspenseQuery,
-} from "@tanstack/react-query";
-import { useEffect } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+} from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 export function StorePage() {
   const { storeId } = useParams();
   const navigate = useNavigate();
   const { openModal } = useModal();
   const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
   const id = Number(storeId);
-  const location = useLocation();
 
-  const { data: isStore } = useSuspenseQuery(getRegularStoreIdOptions(id));
-  const { data } = useSuspenseQuery(getRegularStoreIdDetailOptions(id));
+  // 카메라 스캔을 통한 진입인지 확인
+  const isFromScanner = searchParams.get('from') === 'scanner';
+
+  const { data: isStore } = useSuspenseQuery(getStoreRegularOptions(id));
+  const { data } = useSuspenseQuery(getStampStoreDetailOptions(id));
 
   const storeDetail = data.response;
 
   const { mutate: postDasion } = useMutation({
-    mutationFn: () => postRegularStoreId(id),
+    mutationFn: () => postStoreRegister(id),
     onSuccess: () => {
       openModal(({ onClose }) => (
         <Toast label="단골 등록 성공" onClose={onClose} />
@@ -42,46 +40,48 @@ export function StorePage() {
     },
   });
   const { mutate: postStamp } = useMutation({
-    mutationFn: () => postRegularStoreStamp(id),
+    mutationFn: () => postStoreVisit(id),
     onSuccess: () => {
       openModal(({ onClose }) => (
         <Toast label="스탬프 적립 완료" onClose={onClose} />
       ));
       queryClient.invalidateQueries({
-        queryKey: ["regular", "detail", id],
+        queryKey: ['regular', 'detail', id],
       });
     },
   });
-  const { mutate: postNotiRead } = useMutation({
-    mutationFn: (notiId: number) => postRegularNotiRead(notiId),
+  const { mutate: notiRead } = useMutation({
+    mutationFn: (notiId: number) => postNotiRead(notiId),
     onSuccess: () => {
       openModal(({ onClose }) => (
         <Toast label="공지 읽음 처리 완료" onClose={onClose} />
       ));
-      queryClient.invalidateQueries({ queryKey: ["regular", "main"] });
-      queryClient.invalidateQueries({ queryKey: ["regular", "detail", id] });
+      queryClient.invalidateQueries({ queryKey: ['stamp', 'main'] });
+      queryClient.invalidateQueries({
+        queryKey: ['stamp', 'store', 'detail', storeId],
+      });
     },
   });
 
   useEffect(() => {
-    if (!isStore?.response) {
+    if (isStore.response === false) {
       postDasion();
     } else {
-      if (location.state?.from !== "main") {
+      if (isFromScanner) {
         postStamp();
       }
     }
-  }, [isStore, postDasion]);
+  }, [isStore, postDasion, isFromScanner, postStamp]);
 
   const handleBackClick = () => {
-    navigate("/main");
+    navigate('/main');
   };
 
   const totalVisits = 10;
   const progressPercentage = (storeDetail.availableStamp / totalVisits) * 100;
 
   return (
-    <div className="w-full h-screen px-5 flex flex-col items-center justify-start bg-gray-30">
+    <div className="w-full h-screen px-5 pb-10 flex flex-col items-center justify-start bg-gray-30">
       <header className="w-full py-[13px] flex items-start">
         <Button onClick={handleBackClick}>
           <Pop />
@@ -89,17 +89,25 @@ export function StorePage() {
       </header>
       <Space className="h-[10px]" />
       <div className="flex flex-col w-full gap-[20px] items-center justify-center">
-        <img
-          src={storeDetail.imageUrl}
-          className="w-full h-[190px] rounded-[12px] object-cover"
-          alt="store"
-        />
+        {storeDetail.storeImageUrl ? (
+          <img
+            src={storeDetail.storeImageUrl}
+            className="w-full h-[190px] rounded-[12px] object-cover"
+            alt="store"
+          />
+        ) : (
+          <div className="w-full h-[190px] rounded-[12px] bg-gray-200 flex items-center justify-center">
+            <p className="text-white text-body1">
+              이미지가 등록되지 않은 가게입니다
+            </p>
+          </div>
+        )}
         <div className="flex flex-col w-full gap-[5px] items-center justify-center">
           <h1 className="text-h3 text-black">{storeDetail.storeName}</h1>
           <p className="text-body2 text-gray-800">{storeDetail.introduction}</p>
         </div>
         <div className="flex flex-col gap-[5px] p-[15px] items-center bg-primary-50 rounded-[20px]">
-          <p className="text-body1 text-left w-full text-primary-700">
+          <p className="text-body1 text-left w-full text-gray-600">
             단골 그래프
           </p>
           <div className="w-full">
@@ -110,7 +118,7 @@ export function StorePage() {
               />
             </div>
           </div>
-          <div className="flex text-primary-400 flex-row max-w-full w-[331px] justify-between">
+          <div className="flex text-gray-500 flex-row max-w-full w-[331px] justify-between">
             <p className="text-body3">
               특급 단골 쿠폰까지 {10 - storeDetail.availableStamp}번 남았어요!
             </p>
@@ -139,7 +147,7 @@ export function StorePage() {
               </p>
               <Button
                 className="w-full text-body3 text-white py-[13.5px] bg-gray-800 rounded-[12px]"
-                onClick={() => postNotiRead(storeDetail.latestNoti!.id)}
+                onClick={() => notiRead(storeDetail.latestNoti!.id)}
               >
                 확인했어요
               </Button>
@@ -165,6 +173,28 @@ export function StorePage() {
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="flex flex-col gap-[5px] w-full">
+          <p className="text-body1 text-black w-full text-left">포토 메뉴판</p>
+          {storeDetail.menuImageUrls && storeDetail.menuImageUrls.length > 0 ? (
+            <div className="flex gap-[10px] flex-wrap">
+              {storeDetail.menuImageUrls.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt="menu"
+                  className="w-[100px] h-[100px] rounded-[8px] object-cover"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="w-full h-auto bg-gray-200 rounded-[8px] flex items-center justify-center py-[80px]">
+              <p className="text-white text-body1">
+                메뉴판이 등록되지 않은 가게입니다
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

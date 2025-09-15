@@ -5,23 +5,21 @@ import {
 import { api } from "./instance";
 
 /**
- * 카카오 로그인 콜백 처리
+ * 카카오 로그인/회원가입 처리
  * @param code - 카카오에서 받은 인증 코드
- * @returns Promise<KakaoCallback> - 액세스 토큰
+ * @returns Promise<GetCallbackResponse> - 액세스 토큰 및 리프레시 토큰
  */
-export const getCallback = async (
+export const kakaoLogin = async (
   code: string
 ): Promise<GetCallbackResponse> => {
-  try {
-    const response = await api
-      .get("auth/kakao/exchange", {
-        searchParams: { code },
-      })
-      .json();
+  const response = await api
+    .post("auth/kakao/login", {
+      json: {
+        code,
+        role: "REGULAR",
+      },
+    })
+    .json();
 
-    return getCallbackResponseSchema.parse(response);
-  } catch (error) {
-    console.error("카카오 콜백 API 호출 실패:", error);
-    throw error;
-  }
+  return getCallbackResponseSchema.parse(response);
 };

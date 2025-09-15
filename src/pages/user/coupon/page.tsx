@@ -1,19 +1,29 @@
-import Space from "@/components/Space";
-import Pop from "@/components/svg/Pop";
-import Tab from "@/components/Tab";
-import CouponCard from "@/pages/user/coupon/components/CouponCard";
-import { getRegularCouponOptions } from "@/query/options/regular";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { useSearchParams, Link } from "react-router-dom";
-import { cn } from "../../../utils/cn";
+import Space from '@/components/Space';
+import Pop from '@/components/svg/Pop';
+import Tab from '@/components/Tab';
+import CouponCard from '@/pages/user/coupon/components/CouponCard';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSearchParams, Link } from 'react-router-dom';
+import { cn } from '../../../utils/cn';
+import { getStampCouponsOptions } from '@/query/options/stamp';
+import { CouponType } from '@/schema/api/stamp';
+
+const TAB_TO_COUPON_TYPE_MAP: Record<string, CouponType> = {
+  'my-coupon': CouponType.OWNED,
+  'schedule-coupon': CouponType.SCHEDULED,
+};
 
 export function CouponPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { data: coupons } = useSuspenseQuery(getRegularCouponOptions());
   const tab =
-    (searchParams.get("tab") as "my-coupon" | "schedule-coupon") || "my-coupon";
+    (searchParams.get('tab') as 'my-coupon' | 'schedule-coupon') || 'my-coupon';
 
-  const handleTabClick = (tab: "my-coupon" | "schedule-coupon") => {
+  const couponType = TAB_TO_COUPON_TYPE_MAP[tab];
+  const { data: coupons } = useSuspenseQuery(
+    getStampCouponsOptions(couponType),
+  );
+
+  const handleTabClick = (tab: 'my-coupon' | 'schedule-coupon') => {
     setSearchParams({ tab });
   };
 
@@ -29,23 +39,23 @@ export function CouponPage() {
       <main className="bg-gray w-full h-full bg-gray-30 px-5">
         <div className="flex flex-row items-center justify-start">
           <Tab
-            isActive={tab === "my-coupon"}
-            onClick={() => handleTabClick("my-coupon")}
+            isActive={tab === 'my-coupon'}
+            onClick={() => handleTabClick('my-coupon')}
           >
             내 쿠폰
           </Tab>
           <Tab
-            isActive={tab === "schedule-coupon"}
-            onClick={() => handleTabClick("schedule-coupon")}
+            isActive={tab === 'schedule-coupon'}
+            onClick={() => handleTabClick('schedule-coupon')}
           >
             예정 쿠폰
           </Tab>
         </div>
         <div
           className={cn(
-            "flex flex-col gap-[5px] py-[10px]",
+            'flex flex-col gap-[5px] py-[10px]',
             coupons.response.length === 0 &&
-              "h-full flex items-center justify-center"
+              'h-full flex items-center justify-center',
           )}
         >
           {coupons.response.length === 0 ? (
@@ -54,7 +64,7 @@ export function CouponPage() {
             </p>
           ) : (
             coupons.response.map((coupon) =>
-              tab === "my-coupon" ? (
+              tab === 'my-coupon' ? (
                 Array.from({ length: coupon.couponCount }).map((_, idx) => (
                   <CouponCard
                     key={`${coupon.stampId}-${idx}`}
@@ -68,7 +78,7 @@ export function CouponPage() {
                   coupon={coupon}
                   isCoupon={false}
                 />
-              )
+              ),
             )
           )}
         </div>

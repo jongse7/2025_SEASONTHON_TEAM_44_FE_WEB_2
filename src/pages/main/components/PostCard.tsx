@@ -1,8 +1,8 @@
-import type { GetRegularMainStore } from "@/schema/api/regular";
-import { useNavigate } from "react-router-dom";
+import type { GetStampMainResponseSchema } from '@/schema/api/stamp';
+import { useNavigate } from 'react-router-dom';
 
 interface PostCardProps {
-  post: GetRegularMainStore;
+  post: GetStampMainResponseSchema['response']['storeList'][0];
 }
 
 export default function PostCard({ post }: PostCardProps) {
@@ -10,9 +10,9 @@ export default function PostCard({ post }: PostCardProps) {
   const handleCardClick = () => {
     try {
       const storeId = post.storeId;
-      navigate(`/main/${storeId}`, { state: { from: "main" } });
+      navigate(`/main/${storeId}`);
     } catch (error) {
-      console.error("Navigation error:", error);
+      console.error('Navigation error:', error);
     }
   };
   return (

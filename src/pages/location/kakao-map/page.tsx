@@ -1,8 +1,8 @@
-import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import Button from "@/components/Button";
-import Pop from "@/components/svg/Pop";
-import type { LocationData } from "@/schema/location";
+import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from '@/components/Button';
+import Pop from '@/components/svg/Pop';
+import type { LocationData } from '@/schema/location';
 
 declare global {
   interface Window {
@@ -17,7 +17,7 @@ export const KakaoMapPage = () => {
   useEffect(() => {
     const apiKey = import.meta.env.VITE_KAKAO_KEY;
 
-    const script = document.createElement("script");
+    const script = document.createElement('script');
     script.async = true;
     script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${apiKey}&autoload=false`;
 
@@ -48,7 +48,7 @@ export const KakaoMapPage = () => {
           enableHighAccuracy: true,
           timeout: 5000,
           maximumAge: 300000,
-        }
+        },
       );
     } else {
       createMap(37.566826, 126.9786567);
@@ -83,7 +83,7 @@ export const KakaoMapPage = () => {
   };
 
   const handleSetLocation = () => {
-    const selectedLocation = sessionStorage.getItem("selectedLocation");
+    const selectedLocation = sessionStorage.getItem('selectedLocation');
     if (selectedLocation) {
       const { lat, lng } = JSON.parse(selectedLocation);
       const locationData: LocationData = {
@@ -91,8 +91,8 @@ export const KakaoMapPage = () => {
         longitude: lng,
         accuracy: 0,
       };
-      console.log("위치 데이터 전달:", locationData);
-      navigate("/location", {
+      console.log('위치 데이터 전달:', locationData);
+      navigate('/location', {
         state: {
           selectedLocation: locationData,
         },
@@ -105,7 +105,7 @@ export const KakaoMapPage = () => {
       <div className="bg-white px-5 py-4 border-b border-gray-200">
         <div className="flex items-center justify-between">
           <Button
-            onClick={() => navigate("/location")}
+            onClick={() => navigate('/location')}
             className="text-gray-800 bg-transparent border-none p-0"
           >
             <Pop />
@@ -118,7 +118,7 @@ export const KakaoMapPage = () => {
       <div
         ref={mapContainer}
         className="flex-1 w-full"
-        style={{ minHeight: "400px" }}
+        style={{ minHeight: '400px' }}
       />
       <div className="absolute z-50 bottom-8 left-1/2 transform -translate-x-1/2">
         <Button

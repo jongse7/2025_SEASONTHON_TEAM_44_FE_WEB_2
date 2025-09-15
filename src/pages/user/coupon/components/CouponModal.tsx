@@ -1,9 +1,9 @@
-import { postRegularCouponStampId } from "@/api/authenticated/regular";
-import Button from "@/components/Button";
-import X from "@/components/svg/X";
-import { useModal } from "@/hooks/useModal";
-import { CouponUsedModal } from "@/pages/user/coupon/components/CouponUsedModal";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { postStampCouponUse } from '@/api/authenticated/stamp';
+import Button from '@/components/Button';
+import X from '@/components/svg/X';
+import { useModal } from '@/hooks/useModal';
+import { CouponUsedModal } from '@/pages/user/coupon/components/CouponUsedModal';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface CouponModalProps {
   isOpen: boolean;
@@ -21,12 +21,13 @@ export function CouponModal({
   const { openModal } = useModal();
   const queryClient = useQueryClient();
   const { mutate: postCouponUse } = useMutation({
-    mutationFn: () => postRegularCouponStampId(stampId),
+    mutationFn: () => postStampCouponUse(stampId),
     onSuccess: () => {
       openModal(({ isOpen, onClose }) => (
         <CouponUsedModal isOpen={isOpen} onClose={onClose} />
       ));
-      queryClient.invalidateQueries({ queryKey: ["regular", "coupon"] });
+      queryClient.invalidateQueries({ queryKey: ['stamp', 'mypage'] });
+      queryClient.invalidateQueries({ queryKey: ['stamp', 'coupons'] });
       onClose();
     },
   });

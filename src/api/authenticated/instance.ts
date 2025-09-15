@@ -1,42 +1,31 @@
-import { api } from "@/api/instance";
-import { HTTPError } from "ky";
+import { api } from '@/api/instance';
+import { HTTPError } from 'ky';
 
 export const authenticatedApi = api.extend({
   retry: {
-    limit: 2,
-    methods: ["get", "post", "put", "delete", "options", "trace"],
-    statusCodes: [401, 404],
-    afterStatusCodes: [401, 404],
+    limit: 0,
+    methods: ['get', 'post', 'put', 'delete', 'options', 'trace'],
+    statusCodes: [],
+    afterStatusCodes: [],
   },
   hooks: {
     beforeRequest: [
       (request) => {
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
-          request.headers.set("Authorization", `Bearer ${accessToken}`);
+          request.headers.set('Authorization', `Bearer ${accessToken}`);
         }
       },
     ],
     beforeRetry: [
-      async ({ request, error }) => {
+      async ({ error }) => {
         if (error instanceof HTTPError) {
           const status = error.response.status;
-          if (status === 401) {
-            try {
-              const accessToken = import.meta.env.VITE_ACCESSTOKEN;
-              if (accessToken) {
-                request.headers.set("Authorization", `Bearer ${accessToken}`);
-              }
-            } catch (err) {
-              console.error(err);
-              localStorage.removeItem("accessToken");
-              window.location.href = "/login";
-            }
-          }
-          if (status === 404) {
-            localStorage.removeItem("accessToken");
-            window.location.href = "/login";
-          }
+          console.log(status);
+          // if (status === 403) {
+          //   localStorage.removeItem('accessToken');
+          //   window.location.href = '/login';
+          // }
         }
       },
     ],

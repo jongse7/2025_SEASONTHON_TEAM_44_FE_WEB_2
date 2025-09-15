@@ -1,18 +1,18 @@
-import { getUserLocation, getUserMeSimple } from "@/api/authenticated/user";
-import { getCallback } from "@/api/auth";
+import { getUsersLocation, getUsersMeSimple } from "@/api/authenticated/user";
+import { kakaoLogin } from "@/api/auth";
 import { queryOptions } from "@tanstack/react-query";
 
 export const getUserLocationOptions = () => {
   return queryOptions({
     queryKey: ["user", "location"],
-    queryFn: () => getUserLocation(),
+    queryFn: () => getUsersLocation(),
   });
 };
 
-export const getCallbackOptions = (code: string) => {
+export const kakaoLoginOptions = (code: string) => {
   return queryOptions({
     queryKey: ["auth", "callback", code],
-    queryFn: () => getCallback(code),
+    queryFn: () => kakaoLogin(code),
     enabled: !!code,
     retry: false,
     staleTime: Infinity,
@@ -22,6 +22,6 @@ export const getCallbackOptions = (code: string) => {
 export const getUserMeSimpleOptions = () => {
   return queryOptions({
     queryKey: ["userInfo"],
-    queryFn: () => getUserMeSimple(),
+    queryFn: () => getUsersMeSimple(),
   });
 };

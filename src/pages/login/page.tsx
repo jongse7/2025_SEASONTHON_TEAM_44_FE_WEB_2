@@ -5,7 +5,7 @@ import { useModal } from "@/hooks/useModal";
 import { OwnerModal } from "@/pages/login/components/OwnerModal";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { getCallbackOptions } from "@/query/options/user";
+import { kakaoLoginOptions } from "@/query/options/user";
 import { useEffect } from "react";
 
 export const LoginPage = () => {
@@ -15,7 +15,7 @@ export const LoginPage = () => {
 
   const code = searchParams.get("code");
 
-  const { data, isLoading, error } = useQuery(getCallbackOptions(code || ""));
+  const { data, isLoading, error } = useQuery(kakaoLoginOptions(code || ""));
 
   useEffect(() => {
     if (data && code) {

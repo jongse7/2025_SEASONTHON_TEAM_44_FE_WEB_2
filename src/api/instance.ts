@@ -6,12 +6,24 @@ export const api = ky.create({
   hooks: {
     beforeError: [
       async (error) => {
-        const { success, data } = apiErrorResponseSchema.safeParse(
-          await error.response.json()
-        );
-        if (success) {
-          error.message = data.message;
+        try {
+          const responseText = await error.response.text();
+          if (responseText) {
+            const { success, data } = apiErrorResponseSchema.safeParse(
+              JSON.parse(responseText)
+            );
+            if (success) {
+              error.message = data.message;
+            }
+          }
+        } catch (parseError) {
+          console.error(parseError);
         }
+        if (error.response?.status === 403) {
+          localStorage.clear();
+          // window.location.href = "/login";
+        }
+
         return error;
       },
     ],

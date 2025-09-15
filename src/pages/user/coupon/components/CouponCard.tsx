@@ -1,10 +1,12 @@
-import { useModal } from "@/hooks/useModal";
-import { CouponModal } from "@/pages/user/coupon/components/CouponModal";
-import type { CouponType } from "@/schema/api/regular";
-import { cn } from "@/utils/cn";
+import { useModal } from '@/hooks/useModal';
+import { CouponModal } from '@/pages/user/coupon/components/CouponModal';
+import type { GetStampCouponsResponseSchema } from '@/schema/api/stamp';
+import { cn } from '@/utils/cn';
+
+type CouponData = GetStampCouponsResponseSchema['response'][0];
 
 interface CouponCardProps {
-  coupon: CouponType;
+  coupon: CouponData;
   isCoupon: boolean;
 }
 
@@ -21,13 +23,13 @@ export default function CouponCard({ coupon, isCoupon }: CouponCardProps) {
         />
         <div
           className={cn(
-            "flex-1 flex flex-col justify-center gap-[5px]",
-            isCoupon && "py-[9.5px]"
+            'flex-1 flex flex-col justify-center gap-[5px]',
+            isCoupon && 'py-[9.5px]',
           )}
         >
           <h4 className="text-sub2 text-black">{coupon.storeName}</h4>
           {!isCoupon && (
-            <div className="w-[135px] h-[5px] bg-gray-100 rounded-[12px] overflow-hidden">
+            <div className="w-[135px] h-[5px] bg-gray-200 rounded-[12px] overflow-hidden">
               <div
                 className="h-full bg-primary-500 rounded-[12px] transition-all duration-300"
                 style={{ width: `${progressPercentage}%` }}
@@ -43,7 +45,7 @@ export default function CouponCard({ coupon, isCoupon }: CouponCardProps) {
       </div>
       {isCoupon && (
         <button
-          className="px-2.5 py-[5px] bg-primary-500 h-fit w-fit text-white items-center justify-center flex rounded-[6px]"
+          className="px-2.5 py-[5px] cursor-pointer bg-primary-500 h-fit w-fit text-white items-center justify-center flex rounded-[6px]"
           onClick={() =>
             openModal(({ isOpen, onClose }) => (
               <CouponModal
