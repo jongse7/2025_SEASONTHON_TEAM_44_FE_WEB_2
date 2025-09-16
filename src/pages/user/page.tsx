@@ -18,7 +18,7 @@ export function UserPage() {
     mutationFn: () => deleteUsersMe(),
     onSuccess: () => {
       localStorage.clear();
-      navigate('/login');
+      navigate('/');
     },
   });
   return (
@@ -106,7 +106,7 @@ export function UserPage() {
             className="p-5 w-full flex item-start"
             onClick={() => {
               localStorage.removeItem('accessToken');
-              navigate('/login');
+              navigate('/');
             }}
           >
             로그아웃

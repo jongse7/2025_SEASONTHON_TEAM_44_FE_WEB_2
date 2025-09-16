@@ -40,14 +40,14 @@ export const LoginPage = () => {
   useEffect(() => {
     if (error && code) {
       console.error('카카오 로그인 실패:', error);
-      navigate('/login', { replace: true });
+      navigate('/', { replace: true });
     }
   }, [error, code, navigate]);
 
   const handleKakaoLogin = () => {
     window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${
       import.meta.env.VITE_KAKAO_ID
-    }&redirect_uri=${encodeURIComponent(window.location.origin + '/login')}`;
+    }&redirect_uri=${encodeURIComponent(window.location.origin + '/')}`;
   };
 
   const handleOwnerLogin = () => {

@@ -14,7 +14,7 @@ export default function Layout() {
 export function ProtectedRoute() {
   const token = localStorage.getItem('accessToken');
   if (!token) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
   return <Outlet />;
 }
@@ -32,5 +32,5 @@ export function NotFoundRoute() {
   if (token) {
     return <Navigate to="/main" replace />;
   }
-  return <Navigate to="/login" replace />;
+  return <Navigate to="/" replace />;
 }

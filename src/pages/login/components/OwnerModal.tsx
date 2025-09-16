@@ -1,6 +1,6 @@
-import Button from "@/components/Button";
-import Space from "@/components/Space";
-import X from "@/components/svg/X";
+import Button from '@/components/Button';
+import Space from '@/components/Space';
+import X from '@/components/svg/X';
 
 interface OwnerModalProps {
   isOpen: boolean;
@@ -28,17 +28,17 @@ export function OwnerModal({ isOpen, onClose }: OwnerModalProps) {
           <div className="border-1 border-gray-100 bg-gray-30 rounded-[6px]">
             <div className="flex items-center">
               <p className="py-[5px] w-[187px] border-r-1 border-gray-100 whitespace-nowrap overflow-hidden text-ellipsis px-2.5 text-body4 text-gray-500">
-                http://localhost:5173/owner
+                https://ceo-dasion.vercel.app/
               </p>
               <Button
                 className="p-[5px] text-body3 text-gray-500"
                 onClick={async () => {
                   try {
                     await navigator.clipboard.writeText(
-                      "http://localhost:5173/owner"
+                      'https://ceo-dasion.vercel.app/',
                     );
                   } catch (error) {
-                    console.error("복사 실패:", error);
+                    console.error('복사 실패:', error);
                   }
                 }}
               >

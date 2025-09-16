@@ -19,7 +19,7 @@ export function MainRoute() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route element={<PublicRoute />}>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LoginPage />} />
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/main" element={<MainPage />} />

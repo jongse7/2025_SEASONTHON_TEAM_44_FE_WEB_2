@@ -24,7 +24,7 @@ export const authenticatedApi = api.extend({
           console.log(status);
           if (status === 403 || status === 404) {
             localStorage.removeItem('accessToken');
-            window.location.href = '/login';
+            window.location.href = '/';
           }
         }
       },
