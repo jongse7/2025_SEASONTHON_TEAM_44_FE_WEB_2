@@ -10,7 +10,7 @@ export default function PostCard({ post }: PostCardProps) {
   const handleCardClick = () => {
     try {
       const storeId = post.storeId;
-      navigate(`/main/${storeId}`);
+      navigate(`/main/${storeId}`, { state: { from: 'main' } });
     } catch (error) {
       console.error('Navigation error:', error);
     }

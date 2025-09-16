@@ -14,7 +14,12 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import {
+  useNavigate,
+  useParams,
+  useSearchParams,
+  useLocation,
+} from 'react-router-dom';
 import { CouponStoreModal } from './components/CouponStoreModal';
 
 export function StorePage() {
@@ -23,9 +28,11 @@ export function StorePage() {
   const { openModal } = useModal();
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
+  const location = useLocation();
   const id = Number(storeId);
 
   const isFromScanner = searchParams.get('from') === 'scanner';
+  const isFromMain = location.state?.from === 'main';
 
   const { data: isStore } = useSuspenseQuery(getStoreRegularOptions(id));
   const { data } = useSuspenseQuery(getStampStoreDetailOptions(id));
@@ -80,11 +87,11 @@ export function StorePage() {
     if (isStore.response === false) {
       postDasion();
     } else {
-      // if (isFromScanner && isIdle) {
-      postStamp();
-      // }
+      if (!isFromMain && isIdle) {
+        postStamp();
+      }
     }
-  }, [isStore, postDasion, isFromScanner, postStamp, isIdle]);
+  }, [isStore, postDasion, isFromScanner, postStamp, isIdle, isFromMain]);
 
   const handleBackClick = () => {
     navigate('/main');
