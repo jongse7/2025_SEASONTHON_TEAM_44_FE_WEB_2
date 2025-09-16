@@ -3,6 +3,7 @@ import { postStoreRegister, postStoreVisit } from '@/api/authenticated/store';
 import Button from '@/components/Button';
 import Space from '@/components/Space';
 import Pop from '@/components/svg/Pop';
+import X from '@/components/svg/X';
 import Toast from '@/components/Toast';
 import { useModal } from '@/hooks/useModal';
 import { getStampStoreDetailOptions } from '@/query/options/stamp';
@@ -14,6 +15,7 @@ import {
 } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { CouponStoreModal } from './components/CouponStoreModal';
 
 export function StorePage() {
   const { storeId } = useParams();
@@ -44,11 +46,20 @@ export function StorePage() {
   const { mutate: postStamp } = useMutation({
     mutationFn: () => postStoreVisit(id),
     onSuccess: () => {
-      openModal(({ onClose }) => (
-        <Toast label="스탬프 적립 완료" onClose={onClose} />
-      ));
+      if (data.response.availableStamp === 0) {
+        openModal(({ onClose }) => (
+          <CouponStoreModal
+            storeName={data.response.storeName}
+            onClose={onClose}
+          />
+        ));
+      } else {
+        openModal(({ onClose }) => (
+          <Toast label="스탬프 적립 완료" onClose={onClose} />
+        ));
+      }
       queryClient.invalidateQueries({
-        queryKey: ['regular', 'detail', id],
+        queryKey: ['stamp', 'store', 'detail', storeId],
       });
     },
   });
@@ -69,9 +80,9 @@ export function StorePage() {
     if (isStore.response === false) {
       postDasion();
     } else {
-      if (isFromScanner && isIdle) {
-        postStamp();
-      }
+      // if (isFromScanner && isIdle) {
+      postStamp();
+      // }
     }
   }, [isStore, postDasion, isFromScanner, postStamp, isIdle]);
 
@@ -177,16 +188,35 @@ export function StorePage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-[5px] w-full">
+        <div className="flex flex-col gap-[5px] w-full pb-5">
           <p className="text-body1 text-black w-full text-left">포토 메뉴판</p>
           {storeDetail.menuImageUrls && storeDetail.menuImageUrls.length > 0 ? (
-            <div className="flex gap-[10px] flex-wrap">
+            <div className="flex gap-[10px] overflow-x-auto scrollbar-hide">
               {storeDetail.menuImageUrls.map((url, index) => (
                 <img
                   key={index}
                   src={url}
                   alt="menu"
-                  className="w-[100px] h-[100px] rounded-[8px] object-cover"
+                  className="h-[190px] w-auto rounded-[8px] object-cover flex-shrink-0 cursor-pointer"
+                  onClick={() =>
+                    openModal(({ onClose }) => (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+                        <div className="relative w-full h-full flex items-center justify-center p-4">
+                          <button
+                            onClick={onClose}
+                            className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full z-10"
+                          >
+                            <X className="text-white" />
+                          </button>
+                          <img
+                            src={url}
+                            alt="menu"
+                            className="max-w-full max-h-full object-contain rounded-[8px]"
+                          />
+                        </div>
+                      </div>
+                    ))
+                  }
                 />
               ))}
             </div>

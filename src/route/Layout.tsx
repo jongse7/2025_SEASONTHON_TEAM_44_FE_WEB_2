@@ -26,3 +26,11 @@ export function PublicRoute() {
   }
   return <Outlet />;
 }
+
+export function NotFoundRoute() {
+  const token = localStorage.getItem('accessToken');
+  if (token) {
+    return <Navigate to="/main" replace />;
+  }
+  return <Navigate to="/login" replace />;
+}

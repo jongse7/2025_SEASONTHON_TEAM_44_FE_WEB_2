@@ -5,11 +5,13 @@ import {
   getStampCouponsResponseSchema,
   postStampCouponUseResponseSchema,
   getStampMypageResponseSchema,
+  getStampRecommendResponseSchema,
   type GetStampMainResponseSchema,
   type GetStampStoreDetailResponseSchema,
   type GetStampCouponsResponseSchema,
   type PostStampCouponUseResponseSchema,
   type GetStampMypageResponseSchema,
+  type GetStampRecommendResponseSchema,
   SortOption,
   CouponType,
 } from '@/schema/api/stamp';
@@ -61,4 +63,10 @@ export const getStampMypage =
   async (): Promise<GetStampMypageResponseSchema> => {
     const response = await authenticatedApi.get('stamps/me/summary').json();
     return getStampMypageResponseSchema.parse(response);
+  };
+
+export const getStampRecommend =
+  async (): Promise<GetStampRecommendResponseSchema> => {
+    const response = await authenticatedApi.get('stamps/recommend').json();
+    return getStampRecommendResponseSchema.parse(response);
   };

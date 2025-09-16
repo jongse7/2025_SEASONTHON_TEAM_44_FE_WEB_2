@@ -122,3 +122,18 @@ export const SortOption = {
 } as const;
 
 export type SortOption = (typeof SortOption)[keyof typeof SortOption];
+
+export const getStampRecommendResponseSchema = z.object({
+  response: z
+    .object({
+      storeId: z.number(),
+      name: z.string(),
+      address: z.string(),
+      imageUrl: z.string(),
+    })
+    .nullable(),
+});
+
+export type GetStampRecommendResponseSchema = z.infer<
+  typeof getStampRecommendResponseSchema
+>;

@@ -63,7 +63,9 @@ export function UserPage() {
           </div>
           <div className="flex-1 bg-white rounded-xl p-4 flex flex-col items-center">
             <img src="/images/user/stamp.png" className="size-[50px]" />
-            <p className="text-body1 text-black mb-1">스탬프 적립</p>
+            <p className="text-body1 text-black mb-1 whitespace-nowrap">
+              스탬프 적립
+            </p>
             <p className="text-sub1 text-primary-500">
               {mypageData.response.totalStamp}
             </p>

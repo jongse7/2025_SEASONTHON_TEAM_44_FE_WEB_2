@@ -1,13 +1,18 @@
-import Button from "@/components/Button";
-import X from "@/components/svg/X";
+import Button from '@/components/Button';
+import X from '@/components/svg/X';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface CouponUsedModalProps {
-  isOpen: boolean;
   onClose: () => void;
 }
 
-export function CouponUsedModal({ isOpen, onClose }: CouponUsedModalProps) {
-  if (!isOpen) return null;
+export function CouponUsedModal({ onClose }: CouponUsedModalProps) {
+  const queryClient = useQueryClient();
+  const handleClose = () => {
+    onClose();
+    queryClient.invalidateQueries({ queryKey: ['stamp', 'mypage'] });
+    queryClient.invalidateQueries({ queryKey: ['stamp', 'coupons'] });
+  };
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div className="w-full py-[20px] mx-[21px] px-[12px] bg-white rounded-[12px]">
@@ -31,7 +36,7 @@ export function CouponUsedModal({ isOpen, onClose }: CouponUsedModalProps) {
             className="w-[180px] h-[180px]"
           />
           <Button
-            onClick={onClose}
+            onClick={handleClose}
             className="w-full py-[17px] text-button1 bg-primary-500 text-white rounded-[12px]"
           >
             확인

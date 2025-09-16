@@ -1,5 +1,5 @@
-import ky from "ky";
-import { apiErrorResponseSchema } from "@/schema/api/error";
+import ky from 'ky';
+import { apiErrorResponseSchema } from '@/schema/api/error';
 
 export const api = ky.create({
   prefixUrl: import.meta.env.VITE_API_URL,
@@ -10,7 +10,7 @@ export const api = ky.create({
           const responseText = await error.response.text();
           if (responseText) {
             const { success, data } = apiErrorResponseSchema.safeParse(
-              JSON.parse(responseText)
+              JSON.parse(responseText),
             );
             if (success) {
               error.message = data.message;
@@ -20,7 +20,7 @@ export const api = ky.create({
           console.error(parseError);
         }
         if (error.response?.status === 403) {
-          localStorage.clear();
+          // localStorage.clear();
           // window.location.href = "/login";
         }
 

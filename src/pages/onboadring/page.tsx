@@ -63,12 +63,14 @@ export default function OnboardingPage() {
         {currentData.description}
       </p>
       <Space className="h-25" />
-      <Button
-        onClick={handleNext}
-        className="w-full max-w-sm bg-primary-500 hover:bg-primary-700 text-white rounded-[12px] py-4 text-button1 font-medium transition-colors duration-200"
-      >
-        {isLastStep ? '다시 온 시작!' : '다음'}
-      </Button>
+      <div className="w-full px-5">
+        <Button
+          onClick={handleNext}
+          className="w-full bg-primary-500 hover:bg-primary-700 text-white rounded-[12px] py-4 text-button1 font-medium transition-colors duration-200"
+        >
+          {isLastStep ? '다시 온 시작!' : '다음'}
+        </Button>
+      </div>
       <Space className="h-12" />
     </div>
   );

@@ -14,7 +14,7 @@ export default function CouponCard({ coupon, isCoupon }: CouponCardProps) {
   const { openModal } = useModal();
   const progressPercentage = (coupon.availableStamp / 10) * 100;
   return (
-    <div className="px-[10px] py-[15px] rounded-[12px] items-center border-2 justify-between border-gray-50 flex flex-row gap-[26px] w-full">
+    <div className="px-[10px] py-[15px] rounded-[12px] items-center border-2 justify-between border-gray-50 bg-white flex flex-row gap-[26px] w-full">
       <div className="flex flex-row gap-[10px]">
         <img
           src={coupon.storeImage}
@@ -47,9 +47,8 @@ export default function CouponCard({ coupon, isCoupon }: CouponCardProps) {
         <button
           className="px-2.5 py-[5px] cursor-pointer bg-primary-500 h-fit w-fit text-white items-center justify-center flex rounded-[6px]"
           onClick={() =>
-            openModal(({ isOpen, onClose }) => (
+            openModal(({ onClose }) => (
               <CouponModal
-                isOpen={isOpen}
                 onClose={onClose}
                 storeName={coupon.storeName}
                 stampId={coupon.stampId}

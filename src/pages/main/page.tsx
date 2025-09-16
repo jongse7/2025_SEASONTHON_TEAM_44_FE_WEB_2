@@ -9,7 +9,11 @@ import FilterModal from '@/pages/main/components/FilterModal';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { cn } from '@/utils/cn';
 import { SortOption } from '@/schema/api/stamp';
-import { getStampMainOptions } from '@/query/options/stamp';
+import {
+  getStampMainOptions,
+  getStampRecommendOptions,
+} from '@/query/options/stamp';
+import RecommendCard from './components/RecommendCard';
 
 const FILTER_TO_SORT_MAP: Record<string, SortOption> = {
   [FILTER_OPTIONS.STAMP_SOON]: SortOption.STAMP,
@@ -34,6 +38,8 @@ export const MainPage = () => {
   const { data: mainData } = useSuspenseQuery(
     getStampMainOptions(searchQuery || undefined, sortOption),
   );
+  const { data: recommendData } = useSuspenseQuery(getStampRecommendOptions());
+
   const posts = mainData.response.storeList;
 
   const handleSelectFilter = (filter: keyof typeof FILTER_OPTIONS) => {
@@ -48,6 +54,17 @@ export const MainPage = () => {
         <img src="/images/main/article.png" alt="article" />
       </article>
       <main className="w-full px-5 py-[5px] flex flex-col items-center">
+        {recommendData?.response && (
+          <div className="w-full flex flex-col gap-[10px]">
+            <div className="w-full flex flex-col">
+              <h2 className="text-sub1 text-black">오늘의 다시 온 집</h2>
+              <p className="text-body4 text-gray-500">
+                당신이 마음에 들 만한 가게를 추천해드릴게요
+              </p>
+            </div>
+            <RecommendCard post={recommendData.response} />
+          </div>
+        )}
         <div className="w-full flex flex-row justify-between">
           <div className="w-full flex flex-row gap-[5px] items-center">
             <h2 className="text-sub1 text-black">나의 단골가게</h2>
