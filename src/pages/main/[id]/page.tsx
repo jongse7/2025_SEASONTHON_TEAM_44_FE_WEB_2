@@ -39,7 +39,7 @@ export function StorePage() {
         <Toast label="단골 등록 성공" onClose={onClose} />
       ));
       queryClient.invalidateQueries({
-        queryKey: ['regular', storeId],
+        queryKey: ['regular', id],
       });
     },
   });
@@ -59,7 +59,7 @@ export function StorePage() {
         ));
       }
       queryClient.invalidateQueries({
-        queryKey: ['stamp', 'store', 'detail', storeId],
+        queryKey: ['stamp', 'store', 'detail', id],
       });
     },
   });
@@ -71,7 +71,7 @@ export function StorePage() {
       ));
       queryClient.invalidateQueries({ queryKey: ['stamp', 'main'] });
       queryClient.invalidateQueries({
-        queryKey: ['stamp', 'store', 'detail', storeId],
+        queryKey: ['stamp', 'store', 'detail', id],
       });
     },
   });
