@@ -4,15 +4,15 @@ interface OnboardingIllustrationProps {
 }
 
 const onboardingImages = [
-  "/images/onboarding/onboadring1.png", // 0번째 (오타가 있는 파일명)
-  "/images/onboarding/onboarding2.png", // 1번째
-  "/images/onboarding/onboarding3.png", // 2번째
-  "/images/onboarding/onboarding4.png", // 3번째
+  '/images/onboarding/onboadring1.png', // 0번째 (오타가 있는 파일명)
+  '/images/onboarding/onboarding2.png', // 1번째
+  '/images/onboarding/onboarding3.png', // 2번째
+  '/images/onboarding/onboarding4.png', // 3번째
 ];
 
 export default function OnboardingIllustration({
   step,
-  className = "",
+  className = '',
 }: OnboardingIllustrationProps) {
   return (
     <div className={`flex items-center px-[50px] justify-center ${className}`}>

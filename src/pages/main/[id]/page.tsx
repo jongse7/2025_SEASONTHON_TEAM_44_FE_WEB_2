@@ -26,6 +26,7 @@ export function StorePage() {
   const id = Number(storeId);
 
   const isFromScanner = searchParams.get('from') === 'scanner';
+  const isFromRecommend = searchParams.get('from') === 'recommend';
 
   const { data: isStore } = useSuspenseQuery(getStoreRegularOptions(id));
   const { data } = useSuspenseQuery(getStampStoreDetailOptions(id));
@@ -77,6 +78,10 @@ export function StorePage() {
   });
 
   useEffect(() => {
+    if (isFromRecommend) {
+      return;
+    }
+
     if (isStore.response === false) {
       postDasion();
     } else {
@@ -84,7 +89,7 @@ export function StorePage() {
         postStamp();
       }
     }
-  }, [isStore, postDasion, isFromScanner, postStamp, isIdle]);
+  }, [isStore, postDasion, isFromScanner, postStamp, isIdle, isFromRecommend]);
 
   const handleBackClick = () => {
     navigate('/main');
