@@ -1,3 +1,4 @@
+![Frame 44](https://github.com/user-attachments/assets/a0c54c46-7c9c-4320-8b89-b417dabda175)
 # Groom Hackathon Frontend
 
 React + TypeScript + Vite 기반의 프론트엔드 프로젝트입니다.
